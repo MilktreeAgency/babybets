@@ -11,14 +11,14 @@ interface SpinWheelModalProps {
 
 // 8 Segments = 45 degrees each
 const SEGMENTS = [
-  { label: '10% OFF', color: '#496B71', value: 'BABY10', textColor: '#ffffff' },       // Teal -> White Text
-  { label: 'Free Entry', color: '#FED0B9', value: 'FREETICKET', textColor: '#151e20' }, // Peach -> Teal Dark Text
-  { label: '£10 Credit', color: '#e7e5e4', value: 'CREDIT10', textColor: '#151e20' },  // Stone -> Dark Text
-  { label: '15% OFF', color: '#496B71', value: 'BABY15', textColor: '#ffffff' },       // Teal -> White Text
-  { label: 'Tech Bundle', color: '#FED0B9', value: 'TECHWIN', textColor: '#151e20' },  // Peach -> Teal Dark Text
-  { label: '20% OFF', color: '#496B71', value: 'BABY20', textColor: '#ffffff' },       // Teal -> White Text
-  { label: 'Nursery Set', color: '#e7e5e4', value: 'NURSERY', textColor: '#151e20' },  // Stone -> Dark Text
-  { label: 'Mystery', color: '#FED0B9', value: 'MYSTERY', textColor: '#151e20' },     // Peach -> Teal Dark Text
+  { label: '10% OFF', color: '#496B71', value: 'BABY10', textColor: '#ffffff' },        // Teal -> White Text
+  { label: 'Free Entry', color: '#FED0B9', value: 'FREEENTRY', textColor: '#151e20' }, // Peach -> Dark Text
+  { label: '£5 Credit', color: '#e7e5e4', value: 'CREDIT5', textColor: '#151e20' },     // Stone -> Dark Text
+  { label: '15% OFF', color: '#496B71', value: 'BABY15', textColor: '#ffffff' },        // Teal -> White Text
+  { label: 'Holiday Prize', color: '#FED0B9', value: 'HOLIDAY', textColor: '#151e20' }, // Peach -> Dark Text
+  { label: '20% OFF', color: '#496B71', value: 'BABY20', textColor: '#ffffff' },        // Teal -> White Text
+  { label: 'Pram Bundle', color: '#e7e5e4', value: 'PRAMBUNDLE', textColor: '#151e20' },// Stone -> Dark Text
+  { label: 'Cash Prize', color: '#FED0B9', value: 'CASHPRIZE', textColor: '#151e20' },  // Peach -> Dark Text
 ];
 
 export const SpinWheelModal: React.FC<SpinWheelModalProps> = ({ isOpen, onClose }) => {

@@ -54,15 +54,15 @@ const App = () => {
 
   // Spin Wheel Timer Logic
   useEffect(() => {
-    // Check if user has already seen the wheel or completed an action to dismiss it permanently
-    const hasSeenWheel = localStorage.getItem('babybets_seen_wheel');
+    // Check if user has already seen the wheel in this session
+    const hasSeenWheel = sessionStorage.getItem('babybets_seen_wheel');
 
     if (!hasSeenWheel) {
-      // Reduced to 10 seconds (10000ms) for better UX engagement
+      // Show popup after 30 seconds (30000ms)
       const timer = setTimeout(() => {
         setShowWheel(true);
-        localStorage.setItem('babybets_seen_wheel', 'true');
-      }, 10000); 
+        sessionStorage.setItem('babybets_seen_wheel', 'true');
+      }, 30000); 
 
       return () => clearTimeout(timer);
     }
