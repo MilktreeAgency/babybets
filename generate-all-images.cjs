@@ -1,11 +1,19 @@
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
+require('dotenv').config();
 
 // Fix SSL certificate issue
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const GEMINI_API_KEY = 'AIzaSyAB4yaEKxsTdm7FwpVe53vACN-D6-u3Ugo';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!GEMINI_API_KEY) {
+  console.error('❌ Error: GEMINI_API_KEY not found in environment variables');
+  console.error('Please create a .env file with your API key:');
+  console.error('GEMINI_API_KEY=your_api_key_here');
+  process.exit(1);
+}
+
 const OUTPUT_DIR = path.join(__dirname, 'public/images/competitions');
 
 // Ensure output directory exists
