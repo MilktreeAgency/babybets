@@ -1,0 +1,104 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     🔒 URGENT SECURITY FIX REQUIRED 🔒                       ║
+║                                                                              ║
+║  Google API Key Exposed - Immediate Action Needed                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ CODE HAS BEEN SECURED (Automated Fix Complete)
+
+   - Removed hardcoded API keys from generate-all-images.cjs
+   - Removed hardcoded API keys from generate-images.cjs  
+   - Implemented environment variable security with dotenv
+   - Created .env.example template
+   - All files ready for commit
+
+⚠️  YOU MUST COMPLETE 3 CRITICAL STEPS NOW:
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: REGENERATE YOUR API KEY (5 minutes)                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   1. Go to: https://console.cloud.google.com/apis/credentials
+   2. Project: "Riftly AI Website"
+   3. Find key: AIzaSyAB4yaEKxsTdm7FwpVe53vACN-D6-u3Ugo
+   4. Click Edit → "Regenerate Key" button
+   5. Copy the NEW key
+   
+   6. Add restrictions:
+      • Application: HTTP referrers (add babybets.co.uk/*, localhost:*)
+      • API: Restrict to "Generative Language API" only
+   
+   7. Save
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ STEP 2: CREATE .env FILE (2 minutes)                                        │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   Run in terminal:
+   
+   cd /Users/levi/Desktop/Website\ Files/babybets
+   cp .env.example .env
+   nano .env
+   
+   Add your NEW key from Step 1:
+   GEMINI_API_KEY=your_new_key_here
+   
+   Save and exit (Ctrl+X, Y, Enter)
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ STEP 3: TEST & COMMIT (5 minutes)                                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   # Test it works:
+   node generate-images.cjs
+   
+   # Should see: "Image generation prompts ready!"
+   
+   # Commit the security fix:
+   git add .env.example package.json package-lock.json *.md
+   git commit -m "🔒 Security: Remove hardcoded API key, use environment variables"
+   git push origin main
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 QUICK VERIFICATION:
+
+   ✅ No hardcoded keys in code:
+      grep -r "AIza[A-Za-z0-9_-]\{35\}" --exclude-dir=node_modules --exclude="*.md" .
+      (Should return: No matches)
+   
+   ✅ .env is protected:
+      git check-ignore .env
+      (Should return: .env)
+   
+   ✅ Scripts use environment variables:
+      head -10 generate-images.cjs | grep "process.env"
+      (Should return: match found)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DETAILED DOCUMENTATION:
+
+   For complete instructions, see:
+   
+   • README_SECURITY_FIX.md          - Start here (summary)
+   • API_KEY_SECURITY_CHECKLIST.md   - Step-by-step checklist  
+   • SECURITY_FIX.md                 - Technical details
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 CURRENT STATUS:
+
+   ✅ Code Fixed
+   ⏳ API Key Regeneration Required (Step 1)
+   ⏳ Local .env Setup Required (Step 2)
+   ⏳ Commit & Push Required (Step 3)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️  ESTIMATED TIME: 15 minutes total
+
+🔥 PRIORITY: HIGH - Complete within the next hour
+
+═══════════════════════════════════════════════════════════════════════════════
+
