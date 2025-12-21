@@ -2,16 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, Zap } from 'lucide-react';
 import { Competition } from '../../types';
+import { getCompetitionImageAlt } from '../../utils/imageAlt';
 
 interface CompetitionCardProps {
   comp: Competition;
   variant?: 'default' | 'compact' | 'instant';
 }
-
-// Generate SEO-optimized alt text for competition images
-const getImageAlt = (title: string, category: string, value: number): string => {
-  return `Win ${title} worth £${value.toLocaleString()} - ${category} prize competition UK`;
-};
 
 export const CompetitionCard: React.FC<CompetitionCardProps> = ({ comp, variant = 'default' }) => {
   const percentSold = (comp.ticketsSold / comp.maxTickets) * 100;
@@ -46,7 +42,7 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({ comp, variant 
         <div className="relative aspect-[4/3] overflow-hidden bg-cream-50">
           <img 
             src={comp.image} 
-            alt={getImageAlt(comp.title, comp.category, comp.retailValueGBP)}
+            alt={getCompetitionImageAlt(comp)}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />

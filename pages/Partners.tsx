@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Check, TrendingUp, Users, Gift, ArrowRight, Star, Instagram, Youtube, Facebook, Calculator, DollarSign, Target, Rocket, ShieldCheck, Ticket } from 'lucide-react';
-import { Button, Badge } from '../components/ui';
+import { Button, Badge, PartnerApplicationModal } from '../components/ui';
 import { Link } from 'react-router-dom';
 
 export const Partners = () => {
   const [salesVolume, setSalesVolume] = useState(2500);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Dynamic calculation logic
   const getCommissionRate = (vol: number) => {
@@ -19,6 +20,9 @@ export const Partners = () => {
 
   return (
     <div className="bg-cream-50 min-h-screen font-sans overflow-x-hidden">
+      
+      {/* Partner Application Modal */}
+      <PartnerApplicationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       
       {/* --- HERO SECTION --- */}
       <section className="relative pt-12 pb-20 md:pt-20 md:pb-24">
@@ -37,7 +41,7 @@ export const Partners = () => {
             The partnership program paying more than TikTok Shop. Join the UK's fastest growing family prize platform and turn your content into cash.
           </p>
 
-          <p className="text-rose-500 font-bold text-sm uppercase tracking-widest mb-4 animate-pulse">Limited Spaces Available for Q4</p>
+          <p className="text-rose-500 font-bold text-sm uppercase tracking-widest mb-4 animate-pulse">Limited Spaces Available for Q1 2026</p>
 
           {/* Vimeo Video */}
           <div className="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-teal-900/10 border-[6px] border-white aspect-video max-w-4xl mx-auto bg-stone-900">
@@ -77,7 +81,12 @@ export const Partners = () => {
           </div>
           
           <div className="mt-8 text-center">
-             <Button size="lg" variant="peach" className="px-12 py-4 text-lg shadow-xl shadow-peach-200 hover:shadow-peach-300 transform hover:-translate-y-1">
+             <Button 
+               size="lg" 
+               variant="peach" 
+               className="px-12 py-4 text-lg shadow-xl shadow-peach-200 hover:shadow-peach-300 transform hover:-translate-y-1"
+               onClick={() => setIsModalOpen(true)}
+             >
                Apply Now
              </Button>
           </div>
@@ -174,10 +183,10 @@ export const Partners = () => {
                </div>
             </div>
             
-            <div className="rounded-2xl overflow-hidden relative h-64 md:h-80">
+               <div className="rounded-2xl overflow-hidden relative h-64 md:h-80">
                <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover" alt="Mum and baby" />
                <div className="absolute inset-0 bg-gradient-to-t from-teal-900/80 to-transparent flex items-end justify-center pb-8">
-                  <Button variant="peach" size="lg" className="shadow-lg">Start Earning Now</Button>
+                  <Button variant="peach" size="lg" className="shadow-lg" onClick={() => setIsModalOpen(true)}>Start Earning Now</Button>
                </div>
             </div>
           </div>
@@ -223,7 +232,7 @@ export const Partners = () => {
                      </ul>
                   </div>
                   
-                  <Button className="w-full bg-teal-900 text-white hover:bg-teal-800 py-4">Apply for Ambassador</Button>
+                  <Button className="w-full bg-teal-900 text-white hover:bg-teal-800 py-4" onClick={() => setIsModalOpen(true)}>Apply for Ambassador</Button>
                </div>
 
                {/* Affiliate */}
@@ -259,7 +268,7 @@ export const Partners = () => {
                      </ul>
                   </div>
 
-                  <Button variant="outline" className="w-full py-4">Join Affiliate Program</Button>
+                  <Button variant="outline" className="w-full py-4" onClick={() => setIsModalOpen(true)}>Join Affiliate Program</Button>
                </div>
             </div>
          </div>

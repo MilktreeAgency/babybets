@@ -6,10 +6,10 @@ import { Button, Badge, ProgressBar } from '../components/ui';
 import { Check, Info, Clock, Share2, HelpCircle, ShieldCheck, Ticket, Plus, Minus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
-import { Competition } from '../types';
+import { Competition, TicketBundle } from '../types';
 
 // Helper to calculate best price based on bundles
-const calculateBestPrice = (qty: number, bundles: any[], unitPrice: number) => {
+const calculateBestPrice = (qty: number, bundles: TicketBundle[], unitPrice: number): number => {
   if (qty <= 0) return 0;
   
   // Sort bundles by quantity descending to apply largest discounts first

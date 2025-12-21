@@ -2,6 +2,7 @@ import React from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, HTMLMotionProps } from 'framer-motion';
+import { LucideIcon } from 'lucide-react';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -81,7 +82,7 @@ export const ProgressBar = ({ value, max, className }: { value: number, max: num
 };
 
 // Trust Item
-export const TrustItem = ({ icon: Icon, title, desc }: { icon: any, title: string, desc: string }) => (
+export const TrustItem = ({ icon: Icon, title, desc }: { icon: LucideIcon, title: string, desc: string }) => (
   <div className="flex flex-col items-center text-center p-4">
     <div className="bg-cream-100 p-4 rounded-full mb-4 text-teal-600">
       <Icon size={28} strokeWidth={1.5} />
@@ -90,3 +91,6 @@ export const TrustItem = ({ icon: Icon, title, desc }: { icon: any, title: strin
     <p className="text-sm text-stone-500 leading-relaxed max-w-[220px]">{desc}</p>
   </div>
 );
+
+// Export Modal Components
+export { PartnerApplicationModal } from './PartnerApplicationModal';

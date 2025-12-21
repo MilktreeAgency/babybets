@@ -5,6 +5,15 @@ import { Ticket, CreditCard, User, LogOut, Zap, Trophy, Gift, X, CheckCircle, Ar
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import { PurchasedTicket } from '../types';
+
+interface GroupedCompetition {
+  id: string;
+  title: string;
+  image: string;
+  isInstant?: boolean;
+  tickets: PurchasedTicket[];
+}
 
 // --- Scratch Game Overlay Component ---
 const ScratchGameOverlay = ({ 
@@ -12,7 +21,7 @@ const ScratchGameOverlay = ({
   onClose, 
   onReveal 
 }: { 
-  tickets: any[], 
+  tickets: PurchasedTicket[], 
   onClose: () => void, 
   onReveal: (id: string) => void 
 }) => {
@@ -204,7 +213,7 @@ export const Account = () => {
   const [scratchCompId, setScratchCompId] = useState<string | null>(null);
 
   // Group tickets logic
-  const groupedTickets = purchasedTickets.reduce((acc, ticket) => {
+  const groupedTickets = purchasedTickets.reduce<Record<string, GroupedCompetition>>((acc, ticket) => {
     if (!acc[ticket.competitionId]) {
       acc[ticket.competitionId] = {
         id: ticket.competitionId,
@@ -216,7 +225,7 @@ export const Account = () => {
     }
     acc[ticket.competitionId].tickets.push(ticket);
     return acc;
-  }, {} as Record<string, any>);
+  }, {});
 
   const handleOpenScratch = (compId: string) => {
      setScratchCompId(compId);
@@ -311,7 +320,7 @@ export const Account = () => {
                       </div>
                    ) : (
                       <div className="space-y-6">
-                         {Object.entries(groupedTickets).map(([compId, group]: [string, any]) => (
+                         {Object.entries(groupedTickets).map(([compId, group]) => (
                             <div key={compId} className="bg-white rounded-3xl p-6 shadow-sm border border-cream-200">
                                <div className="flex flex-col md:flex-row gap-6">
                                   <div className="w-full md:w-32 h-32 rounded-2xl overflow-hidden shrink-0">
@@ -331,7 +340,7 @@ export const Account = () => {
                                      <div className="bg-cream-50 rounded-xl p-4">
                                         <div className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-3">Your Ticket Numbers</div>
                                         <div className="flex flex-wrap gap-2">
-                                           {group.tickets.map((t: any) => (
+                                           {group.tickets.map((t) => (
                                               <span 
                                                   key={t.id} 
                                                   className={`border font-mono font-bold px-3 py-1 rounded-lg text-sm shadow-sm flex items-center gap-1.5 ${t.isWinner 
@@ -347,7 +356,7 @@ export const Account = () => {
 
                                      {group.isInstant && (
                                         <div className="mt-6 flex justify-end">
-                                            {group.tickets.some((t:any) => !t.isRevealed) ? (
+                                            {group.tickets.some((t) => !t.isRevealed) ? (
                                               <Button 
                                                   onClick={() => handleOpenScratch(group.id)} 
                                                   variant="accent" 
