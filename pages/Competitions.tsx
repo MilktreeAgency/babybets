@@ -159,7 +159,7 @@ export const Competitions = () => {
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
              <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-teal-900 tracking-tight mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold font-serif text-teal-900 tracking-tight mb-4">
                   {searchParams.get('filter') === 'instant' 
                     ? 'Instant Win Competitions'
                     : activeCategory === 'All' 
@@ -293,7 +293,7 @@ export const Competitions = () => {
                 <div className="inline-block p-4 bg-cream-50 rounded-full mb-4 text-stone-300">
                    <Filter size={32} />
                 </div>
-                <h2 className="text-xl font-bold text-teal-900 mb-2">No competitions found</h2>
+                <h2 className="text-xl font-bold font-serif text-teal-900 mb-2">No competitions found</h2>
                 <p className="text-stone-500 mb-6">Try adjusting your filters or search terms.</p>
                 <Button onClick={() => {
                    setSearchQuery('');

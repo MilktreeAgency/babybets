@@ -6,6 +6,7 @@ import { competitions, winners } from '../mockData';
 import { Button, Badge, ProgressBar, TrustItem } from '../components/ui';
 import { CompetitionCard } from '../components/ui/CompetitionCard';
 import { SEO } from '../components/SEO';
+import { CloudDecor, HeartDecor, SparkleDecor, ConfettiDecor } from '../components/illustrations';
 
 // --- COMPONENTS ---
 
@@ -21,7 +22,7 @@ const CategoryTile: React.FC<{ title: string; image: string; link: string }> = (
     
     <div className="absolute inset-0 p-6 flex flex-col justify-end">
       <div className="flex justify-between items-end">
-        <h3 className="text-2xl font-bold text-white tracking-tight drop-shadow-md">{title}</h3>
+        <h3 className="text-2xl font-bold font-serif text-white tracking-tight drop-shadow-md">{title}</h3>
         <div className="bg-peach-300 text-teal-900 p-2 rounded-lg transition-transform duration-300 group-hover:-translate-y-1 group-hover:bg-peach-400 shadow-lg">
            <ArrowUpRight size={20} strokeWidth={2.5} />
         </div>
@@ -33,87 +34,142 @@ const CategoryTile: React.FC<{ title: string; image: string; link: string }> = (
 // --- SECTIONS ---
 
 const HeroSection = () => (
-  <section className="bg-cream-100 border-b border-cream-200 relative overflow-hidden">
-     {/* Decorative circles */}
-    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-peach-100/50 rounded-full blur-3xl -z-10" />
-    <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-teal-100/50 rounded-full blur-3xl -z-10" />
+  <section className="bg-gradient-to-br from-cream-50 via-cream-100 to-peach-50/30 border-b border-cream-200 relative overflow-hidden">
+     {/* Enhanced decorative circles */}
+    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-peach-200/40 rounded-full blur-3xl -z-10" />
+    <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[700px] h-[700px] bg-teal-100/40 rounded-full blur-3xl -z-10" />
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-peach-100/20 rounded-full blur-3xl -z-10" />
+    
+    {/* Elegant floating illustrations */}
+    <CloudDecor className="absolute top-20 right-24 w-32 h-32 opacity-40 animate-float hidden lg:block" />
+    <CloudDecor variant="small" className="absolute bottom-40 left-20 w-24 h-24 opacity-30 animate-float-reverse hidden md:block" />
+    <SparkleDecor className="absolute top-1/3 left-1/4 w-16 h-16 opacity-50 animate-gentle-spin hidden xl:block" />
+    <HeartDecor className="absolute bottom-1/4 right-1/3 w-14 h-14 opacity-30 animate-float hidden xl:block" />
 
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
-      <div className="flex flex-col md:flex-row gap-12 items-center">
-        <div className="w-full md:w-5/12 text-left z-10">
-           <Badge variant="peach" className="mb-6 px-3 py-1.5 text-xs">New Prizes Added Weekly</Badge>
-           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-teal-900 tracking-tight leading-[1.1] mb-6">
-             Win Baby Prizes & Family Holidays from <span className="text-teal-500 relative inline-block">49p<span className="absolute bottom-2 left-0 w-full h-3 bg-peach-300/40 -z-10 rounded-full"></span></span>
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-16 md:py-28 lg:py-32">
+      <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center">
+        {/* Left Column - Now much wider and more spacious */}
+        <div className="w-full lg:w-[55%] text-left z-10 space-y-8">
+           {/* Badge */}
+           <div>
+             <Badge variant="peach" className="mb-0 px-4 py-2 text-sm font-bold shadow-sm">
+               ✨ New Prizes Added Weekly
+             </Badge>
+           </div>
+           
+           {/* Headline */}
+           <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold font-serif text-teal-900 tracking-tight leading-[1.05] mb-0">
+             Win Baby Prizes & Family Holidays from{' '}
+             <span className="text-teal-500 relative inline-block">
+               49p
+               <span className="absolute bottom-3 left-0 w-full h-4 bg-peach-300/40 -z-10 rounded-full"></span>
+             </span>
            </h1>
-           <p className="text-stone-600 text-lg mb-8 font-medium max-w-lg leading-relaxed">
-             Win your dream nursery, family holidays, and tax-free cash at a fraction of the cost. Join 25,000+ parents winning today.
+           
+           {/* Subheadline */}
+           <p className="text-stone-600 text-xl lg:text-2xl font-medium leading-relaxed max-w-2xl">
+             Win your dream nursery, family holidays, and tax-free cash at a fraction of the cost. Join <span className="text-teal-700 font-bold">25,000+ parents</span> winning today.
            </p>
-           <div className="flex flex-col sm:flex-row gap-4">
-             <Link to="/competitions">
-               <Button size="lg" className="w-full sm:w-auto text-lg py-4 px-8 shadow-teal-200 shadow-xl">
+           
+           {/* CTA Buttons */}
+           <div className="flex flex-col sm:flex-row gap-4 pt-2">
+             <Link to="/competitions" className="flex-shrink-0">
+               <Button size="lg" className="w-full sm:w-auto text-lg py-6 px-10 shadow-teal-300 shadow-2xl hover:shadow-teal-400 hover:shadow-xl transition-all duration-300 font-bold">
                  View Competitions
+                 <ArrowRight size={20} className="ml-2" />
                </Button>
              </Link>
-             <Link to="/winners">
-               <Button variant="outline" size="lg" className="w-full sm:w-auto">
+             <Link to="/winners" className="flex-shrink-0">
+               <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg py-6 px-10 border-2 border-teal-700 text-teal-700 hover:bg-teal-700 hover:text-white font-bold transition-all duration-300">
                  See Winners
                </Button>
              </Link>
            </div>
            
-           {/* Brand Logos Section */}
-           <div className="mt-10">
-             <p className="text-xs text-stone-400 font-bold uppercase tracking-wider mb-4">Win prizes from top brands</p>
-             <div className="flex flex-wrap items-center gap-6 opacity-60">
-               <div className="text-stone-600 font-bold text-xl">LEGO</div>
-               <div className="text-stone-600 font-bold text-xl">Bugaboo</div>
-               <div className="text-stone-600 font-bold text-xl">Stokke</div>
-               <div className="text-stone-600 font-bold text-xl">Disney</div>
-               <div className="text-stone-600 font-bold text-xl">Apple</div>
-             </div>
-           </div>
-           
-           <div className="mt-8 flex items-center gap-3">
+           {/* Social Proof - Reviews */}
+           <div className="flex items-center gap-4 pt-4">
              <div className="flex -space-x-3">
-               {[1,2,3,4].map(i => (
-                 <img key={i} src={`https://i.pravatar.cc/100?img=${i+20}`} className="w-10 h-10 rounded-full border-2 border-cream-100" alt={`BabyBets winner ${i}`} loading="lazy" />
+               {[1,2,3,4,5].map(i => (
+                 <img 
+                   key={i} 
+                   src={`https://i.pravatar.cc/100?img=${i+20}`} 
+                   className="w-12 h-12 rounded-full border-3 border-white shadow-md" 
+                   alt={`BabyBets winner ${i}`} 
+                   loading="lazy" 
+                 />
                ))}
              </div>
              <div>
-               <div className="flex text-peach-500 gap-0.5 mb-0.5">
-                 <Star size={16} fill="currentColor" />
-                 <Star size={16} fill="currentColor" />
-                 <Star size={16} fill="currentColor" />
-                 <Star size={16} fill="currentColor" />
-                 <Star size={16} fill="currentColor" />
+               <div className="flex text-peach-500 gap-0.5 mb-1">
+                 <Star size={18} fill="currentColor" />
+                 <Star size={18} fill="currentColor" />
+                 <Star size={18} fill="currentColor" />
+                 <Star size={18} fill="currentColor" />
+                 <Star size={18} fill="currentColor" />
                </div>
-               <span className="text-xs text-stone-500 font-bold">4.9/5 from 7,800+ reviews</span>
+               <span className="text-sm text-stone-600 font-bold">4.9/5 from 7,800+ reviews</span>
+             </div>
+           </div>
+           
+           {/* Brand Logos Section */}
+           <div className="pt-6 border-t border-stone-200">
+             <p className="text-xs text-stone-400 font-bold uppercase tracking-wider mb-5">Trusted brands we feature</p>
+             <div className="flex flex-wrap items-center gap-8 opacity-70">
+               <div className="text-stone-700 font-bold text-2xl tracking-tight">LEGO</div>
+               <div className="text-stone-700 font-bold text-2xl tracking-tight">Bugaboo</div>
+               <div className="text-stone-700 font-bold text-2xl tracking-tight">Stokke</div>
+               <div className="text-stone-700 font-bold text-2xl tracking-tight">Disney</div>
+               <div className="text-stone-700 font-bold text-2xl tracking-tight">Apple</div>
              </div>
            </div>
         </div>
         
-        <div className="w-full md:w-7/12 relative">
-           <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-teal-900/10 border-[6px] border-white">
-             <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200" alt="Win family holidays and luxury prizes with BabyBets UK competitions" loading="eager" className="w-full h-auto object-cover" />
+        {/* Right Column - Hero Image */}
+        <div className="w-full lg:w-[45%] relative">
+           <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-teal-900/20 border-[8px] border-white">
+             <img 
+               src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200" 
+               alt="Win family holidays and luxury prizes with BabyBets UK competitions" 
+               loading="eager" 
+               className="w-full h-auto object-cover aspect-[4/5]" 
+             />
              
-             {/* Floating Badge */}
-             <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-lg max-w-[200px] animate-bounce" style={{ animationDuration: '4s' }}>
+             {/* Floating Winner Badge */}
+             <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl max-w-[220px] animate-bounce border border-cream-100" style={{ animationDuration: '4s' }}>
                 <div className="flex gap-3 items-center mb-2">
-                   <div className="bg-peach-100 p-2 rounded-full text-peach-600">
-                     <Trophy size={18} />
+                   <div className="bg-peach-100 p-2.5 rounded-full text-peach-600">
+                     <Trophy size={20} />
                    </div>
-                   <div className="text-xs font-bold text-stone-400 uppercase">Just Won</div>
+                   <div className="text-xs font-bold text-stone-400 uppercase tracking-wide">Just Won</div>
                 </div>
-                <div className="text-sm font-bold text-teal-900 leading-tight">Sarah from Leeds won a Disney Holiday!</div>
+                <div className="text-base font-bold text-teal-900 leading-tight">Sarah from Leeds won a Disney Holiday!</div>
              </div>
 
-             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-teal-900/90 to-transparent p-8 pt-24 text-white flex justify-between items-end">
-               <div>
-                 <div className="text-xs font-bold uppercase mb-1 text-peach-300">Ending Tonight</div>
-                 <div className="text-2xl font-bold">Win this Family Holiday + £5,000</div>
+             {/* Bottom CTA Overlay */}
+             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-teal-900/95 via-teal-900/80 to-transparent p-6 sm:p-8 pt-32 text-white">
+               <div className="flex justify-between items-end gap-4">
+                 <div className="flex-grow">
+                   <div className="text-xs font-bold uppercase mb-2 text-peach-300 tracking-wider">Ending Tonight</div>
+                   <div className="text-xl sm:text-2xl font-bold leading-tight">Win this Family Holiday + £5,000</div>
+                 </div>
+                 <Link to="/competitions" className="flex-shrink-0">
+                   <div className="bg-white text-teal-900 rounded-full p-3 sm:p-4 hover:scale-110 hover:bg-peach-300 transition-all duration-300 cursor-pointer shadow-lg">
+                     <ArrowRight size={22} strokeWidth={2.5} />
+                   </div>
+                 </Link>
                </div>
-               <div className="bg-white text-teal-900 rounded-full p-3 hover:scale-110 transition-transform cursor-pointer">
-                 <ArrowRight size={20} />
+             </div>
+           </div>
+           
+           {/* Floating Stats Card */}
+           <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-2xl border border-cream-200 hidden lg:block animate-float" style={{ animationDuration: '5s' }}>
+             <div className="flex items-center gap-4">
+               <div className="bg-teal-500 text-white p-4 rounded-xl">
+                 <Gift size={28} strokeWidth={2} />
+               </div>
+               <div>
+                 <div className="text-3xl font-bold text-teal-900">£10M+</div>
+                 <div className="text-sm text-stone-600 font-medium">Prizes Won</div>
                </div>
              </div>
            </div>
@@ -193,6 +249,10 @@ const InstantWinsSection = () => {
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-200 rounded-full blur-[120px]"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-peach-100 rounded-full blur-[150px]"></div>
        </div>
+       
+       {/* Subtle decorative elements */}
+       <SparkleDecor className="absolute top-8 right-16 w-20 h-20 opacity-60 animate-gentle-spin hidden lg:block" />
+       <ConfettiDecor className="absolute bottom-12 left-20 w-16 h-16 opacity-50 hidden md:block" />
 
        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
@@ -200,7 +260,7 @@ const InstantWinsSection = () => {
                 <div className="inline-flex items-center gap-2 bg-peach-300 text-teal-900 px-3 py-1 rounded-full text-xs font-bold mb-4 uppercase tracking-wider shadow-sm border-2 border-peach-400">
                   <Zap size={14} fill="currentColor" /> Flash Prizes
                 </div>
-                <h2 className="text-4xl font-bold tracking-tight text-teal-900">Instant Wins</h2>
+                <h2 className="text-4xl font-bold font-serif tracking-tight text-teal-900">Instant Wins</h2>
                 <p className="text-stone-600 mt-2 max-w-xl font-medium">Find a lucky ticket number and win these prizes instantly. No need to wait for the draw date!</p>
              </div>
              <Link to="/competitions?filter=instant">
@@ -229,7 +289,7 @@ const DrawingSoonSection = () => {
     <section className="py-16 bg-cream-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4 mb-8">
-          <h2 className="text-3xl font-bold text-teal-900 tracking-tight">Drawing Soon</h2>
+          <h2 className="text-3xl font-bold font-serif text-teal-900 tracking-tight">Drawing Soon</h2>
           <div className="h-px bg-cream-300 flex-grow"></div>
           <Link to="/competitions" className="text-sm font-bold text-teal-600 uppercase hover:text-teal-800">View All</Link>
         </div>
@@ -276,8 +336,8 @@ const MaisibelleTeaserSection = () => (
         {/* Text Content */}
         <div className="w-full md:w-1/2 order-1 md:order-2 text-center md:text-left">
            <Badge variant="peach" className="mb-6 bg-peach-200 text-teal-900 border-peach-300">New Collaboration</Badge>
-           <h2 className="text-4xl md:text-5xl font-bold text-teal-900 mb-6 tracking-tight leading-tight">
-             The <span className="text-peach-500 font-serif italic">Maisibelle</span> Edit is Live
+           <h2 className="text-4xl md:text-5xl font-bold font-serif text-teal-900 mb-6 tracking-tight leading-tight">
+             The <span className="text-peach-500 italic">Maisibelle</span> Edit is Live
            </h2>
            <p className="text-lg text-stone-600 mb-8 leading-relaxed">
              We've teamed up with everyone's favourite mumfluencer Maisie to curate the ultimate family wishlist. Win her hand-picked nursery must-haves and dream holidays.
@@ -310,7 +370,7 @@ const CategoriesSection = () => {
   return (
     <section className="py-8 bg-cream-50 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-teal-900 tracking-tight mb-8 text-center">Browse Prize Categories</h2>
+        <h2 className="text-3xl font-bold font-serif text-teal-900 tracking-tight mb-8 text-center">Browse Prize Categories</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {categories.map((cat, i) => (
              <CategoryTile key={i} title={cat.title} image={cat.image} link={cat.link} />
@@ -326,7 +386,7 @@ const HowItWorksSection = () => (
     <div className="absolute inset-0 bg-teal-600/20 pattern-dots" /> {/* abstract pattern placeholder */}
     <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
       <Badge variant="peach" className="mb-4 bg-peach-300 text-teal-900">Simple & Fair</Badge>
-      <h2 className="text-4xl font-bold mb-4 tracking-tight">How It Works</h2>
+      <h2 className="text-4xl font-bold font-serif mb-4 tracking-tight">How It Works</h2>
       <p className="text-teal-100 mb-16 max-w-xl mx-auto text-lg">We've made entering simpler than ever. Win your dream prizes in 4 easy steps.</p>
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
@@ -345,7 +405,7 @@ const HowItWorksSection = () => (
                  <step.icon size={36} strokeWidth={1.5} />
                </div>
              </div>
-             <h3 className="font-bold text-xl mb-3">{step.title}</h3>
+             <h3 className="font-bold font-serif text-xl mb-3">{step.title}</h3>
              <p className="text-teal-100/80 text-sm leading-relaxed px-4">{step.text}</p>
           </div>
         ))}
@@ -370,7 +430,7 @@ const JustLaunchedSection = () => {
            <div className="bg-teal-500 text-white p-1.5 rounded-lg shadow-sm">
              <Star size={20} fill="white" />
            </div>
-           <h2 className="text-3xl font-bold text-teal-900 tracking-tight">Just Launched</h2>
+           <h2 className="text-3xl font-bold font-serif text-teal-900 tracking-tight">Just Launched</h2>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -384,14 +444,17 @@ const JustLaunchedSection = () => {
 };
 
 const TestimonialsSection = () => (
-  <section className="py-20 bg-cream-100 border-y border-cream-200">
+  <section className="py-20 bg-cream-100 border-y border-cream-200 relative overflow-hidden">
+     {/* Subtle heart decoration */}
+     <HeartDecor className="absolute top-12 right-16 w-16 h-16 opacity-30 animate-float hidden lg:block" />
+     
      <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-16 items-center">
            <div className="w-full md:w-1/3">
               <div className="flex text-peach-500 mb-6 gap-1">
                 {[1,2,3,4,5].map(i => <Star key={i} fill="currentColor" size={24} />)}
               </div>
-              <h2 className="text-4xl font-bold text-teal-900 mb-6 tracking-tight">Don't just take our word for it.</h2>
+              <h2 className="text-4xl font-bold font-serif text-teal-900 mb-6 tracking-tight">Don't just take our word for it.</h2>
               <p className="text-stone-600 mb-8 text-lg leading-relaxed">We have over 7,000 5-star reviews on Trustpilot. We pride ourselves on being the most transparent, family-friendly prize site in the UK.</p>
               <Button variant="outline" className="border-teal-900 text-teal-900 hover:bg-teal-900 hover:text-white">Read All Reviews</Button>
            </div>
@@ -418,11 +481,17 @@ const TestimonialsSection = () => (
 
 const NewsletterSection = () => (
   <section className="relative bg-peach-300 overflow-hidden mt-12 md:mt-24">
+    {/* Elegant decorative illustrations */}
+    <CloudDecor className="absolute top-8 left-8 w-28 h-28 opacity-30 animate-float hidden md:block" />
+    <CloudDecor variant="small" className="absolute bottom-8 right-12 w-24 h-24 opacity-25 animate-float-reverse hidden md:block" />
+    <HeartDecor className="absolute top-1/2 right-20 w-12 h-12 opacity-40 animate-gentle-spin hidden lg:block" />
+    <SparkleDecor className="absolute bottom-16 left-24 w-16 h-16 opacity-40 hidden lg:block" />
+    
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 text-center">
        <div className="inline-flex items-center gap-2 border border-teal-900/10 rounded-full px-4 py-1.5 text-sm font-bold mb-8 bg-white/40 text-teal-900">
          <Mail size={16} /> Join the Club
        </div>
-       <h2 className="text-4xl md:text-5xl font-bold text-teal-900 tracking-tight leading-none mb-6">
+       <h2 className="text-4xl md:text-5xl font-bold font-serif text-teal-900 tracking-tight leading-none mb-6">
          Never Miss a Draw
        </h2>
        <p className="text-teal-900/80 text-lg mb-10 max-w-xl mx-auto font-medium">
@@ -470,7 +539,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cream-50 font-sans">
+    <div className="min-h-screen bg-cream-50">
       <SEO
         title="Win Baby Prizes, Nursery Furniture & Family Holidays UK | BabyBets"
         description="Enter to win premium baby prizes from £0.49. Bugaboo prams, SNOO sleepers, Disney holidays & tax-free cash. Join 25,000+ parents winning with BabyBets UK."

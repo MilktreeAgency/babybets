@@ -214,7 +214,7 @@ export const CompetitionDetail = () => {
             </motion.div>
             
             <div className="p-8 bg-white rounded-3xl border border-cream-200 shadow-sm">
-               <h2 className="font-bold text-teal-900 mb-4 text-lg">Prize Description</h2>
+               <h2 className="font-bold font-serif text-teal-900 mb-4 text-lg">Prize Description</h2>
                <p className="text-stone-600 leading-relaxed text-base">{competition.description}</p>
                
                <div className="mt-6 flex items-start gap-3 p-4 bg-cream-50 rounded-xl text-sm text-stone-600">
@@ -230,7 +230,7 @@ export const CompetitionDetail = () => {
                 <span className="bg-teal-100 text-teal-800 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider">{competition.category}</span>
                 {competition.status === 'ending_soon' && <span className="bg-rose-100 text-rose-600 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider">Ending Soon</span>}
              </div>
-             <h1 className="text-4xl lg:text-5xl font-bold text-teal-900 mb-6 tracking-tight leading-tight">Win {competition.title}</h1>
+             <h1 className="text-4xl lg:text-5xl font-bold font-serif text-teal-900 mb-6 tracking-tight leading-tight">Win {competition.title}</h1>
              
              <div className="flex items-center gap-6 mb-10 p-6 bg-white rounded-2xl border border-cream-200 shadow-sm">
                <div>
@@ -256,7 +256,7 @@ export const CompetitionDetail = () => {
 
              {/* Ticket Selector Area */}
              <div className="mb-10">
-                <h3 className="font-bold text-teal-900 mb-4 flex items-center gap-2 text-lg">
+                <h3 className="font-bold font-serif text-teal-900 mb-4 flex items-center gap-2 text-lg">
                    Select Entry Bundle
                 </h3>
                 

@@ -59,7 +59,7 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({ comp, variant 
         
         {/* Content */}
         <div className="p-5 flex flex-col flex-grow">
-          <h3 className={`font-bold mb-2 line-clamp-2 leading-tight min-h-[2.5rem] text-sm md:text-base ${variant === 'instant' ? 'text-white' : 'text-teal-900'}`}>
+          <h3 className={`font-bold font-serif mb-2 line-clamp-2 leading-tight min-h-[2.5rem] text-sm md:text-base ${variant === 'instant' ? 'text-white' : 'text-teal-900'}`}>
             Win {comp.title}
           </h3>
           

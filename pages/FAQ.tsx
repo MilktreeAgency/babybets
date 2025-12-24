@@ -113,7 +113,7 @@ export const FAQ = () => {
 
       <div className="max-w-3xl mx-auto px-4">
         <div className="text-center mb-16">
-           <h1 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4">Frequently Asked Questions</h1>
+           <h1 className="text-4xl md:text-5xl font-bold font-serif text-teal-900 mb-4">Frequently Asked Questions</h1>
            <p className="text-stone-500 text-lg">Everything you need to know about entering BabyBets competitions.</p>
         </div>
 

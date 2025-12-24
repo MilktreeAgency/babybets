@@ -145,7 +145,7 @@ export const Admin = () => {
             <div className="bg-teal-500 w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white mb-4 shadow-lg shadow-teal-200">
                <Lock size={32} />
             </div>
-            <h1 className="text-2xl font-bold text-teal-900">Admin Portal</h1>
+            <h1 className="text-2xl font-bold font-serif text-teal-900">Admin Portal</h1>
             <p className="text-stone-500 text-sm mt-2">Please sign in to manage competitions.</p>
           </div>
 
@@ -196,7 +196,7 @@ export const Admin = () => {
              <div className="flex gap-4 mb-4">
                 <img src={comp.image} className="w-16 h-16 rounded-xl object-cover bg-stone-100" alt="" />
                 <div>
-                   <h3 className="font-bold text-teal-900 leading-tight">{comp.title}</h3>
+                   <h3 className="font-bold font-serif text-teal-900 leading-tight">{comp.title}</h3>
                    <div className="flex flex-wrap gap-2 mt-2">
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide ${
                         comp.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 
@@ -304,7 +304,7 @@ export const Admin = () => {
         
         {/* Basic Info */}
         <div className="bg-white p-5 md:p-8 rounded-[2rem] shadow-sm border border-cream-200">
-          <h2 className="text-xl font-bold text-teal-900 mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-bold font-serif text-teal-900 mb-6 flex items-center gap-2">
             <Tag size={20} className="text-peach-400" /> Basic Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -372,7 +372,7 @@ export const Admin = () => {
         {/* Media & Pricing */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           <div className="bg-white p-5 md:p-8 rounded-[2rem] shadow-sm border border-cream-200">
-             <h2 className="text-xl font-bold text-teal-900 mb-6 flex items-center gap-2">
+             <h2 className="text-xl font-bold font-serif text-teal-900 mb-6 flex items-center gap-2">
                <ImageIcon size={20} className="text-peach-400" /> Imagery
              </h2>
              <label className="block text-xs font-bold uppercase text-stone-500 mb-2 ml-1">Main Image URL</label>
@@ -394,7 +394,7 @@ export const Admin = () => {
           </div>
 
           <div className="bg-white p-5 md:p-8 rounded-[2rem] shadow-sm border border-cream-200">
-             <h2 className="text-xl font-bold text-teal-900 mb-6 flex items-center gap-2">
+             <h2 className="text-xl font-bold font-serif text-teal-900 mb-6 flex items-center gap-2">
                <DollarSign size={20} className="text-peach-400" /> Pricing & Limits
              </h2>
              
@@ -436,7 +436,7 @@ export const Admin = () => {
 
         {/* Schedule */}
         <div className="bg-white p-5 md:p-8 rounded-[2rem] shadow-sm border border-cream-200">
-          <h2 className="text-xl font-bold text-teal-900 mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-bold font-serif text-teal-900 mb-6 flex items-center gap-2">
             <Calendar size={20} className="text-peach-400" /> Draw Schedule
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -465,7 +465,7 @@ export const Admin = () => {
 
         {/* Bundles Builder */}
         <div className="bg-white p-5 md:p-8 rounded-[2rem] shadow-sm border border-cream-200">
-          <h2 className="text-xl font-bold text-teal-900 mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-bold font-serif text-teal-900 mb-6 flex items-center gap-2">
              <Tag size={20} className="text-peach-400" /> Ticket Bundles
           </h2>
           <p className="text-sm text-stone-500 mb-6">Create discount tiers for users buying multiple tickets.</p>

@@ -4,6 +4,7 @@ import { X, Trash2, ArrowRight } from 'lucide-react';
 import { Button } from './index';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CloudDecor, HeartDecor } from '../illustrations';
 
 export const BasketDrawer = () => {
   const { isCartOpen, setCartOpen, cart, removeFromCart, cartTotal } = useStore();
@@ -35,9 +36,15 @@ export const BasketDrawer = () => {
 
             <div className="flex-grow overflow-y-auto p-6 space-y-6">
               {cart.length === 0 ? (
-                <div className="text-center py-20">
-                  <p className="text-stone-400 mb-4">Your basket is empty.</p>
-                  <Button variant="outline" onClick={() => setCartOpen(false)}>Start Browsing</Button>
+                <div className="text-center py-20 relative">
+                  {/* Elegant empty state illustration */}
+                  <div className="relative inline-block mb-6">
+                    <CloudDecor variant="small" className="w-32 h-32 opacity-50 mx-auto" />
+                    <HeartDecor className="w-10 h-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-70" />
+                  </div>
+                  <p className="text-stone-400 mb-4 font-medium">Your basket is empty.</p>
+                  <p className="text-xs text-stone-300 mb-6">Start adding prizes you'd love to win!</p>
+                  <Button variant="outline" onClick={() => setCartOpen(false)}>Browse Competitions</Button>
                 </div>
               ) : (
                 cart.map((item, idx) => (

@@ -60,9 +60,9 @@ export const MaisibelleCollab = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="text-5xl md:text-7xl font-bold text-teal-900 leading-[1.1] mb-6 tracking-tight"
+                className="text-5xl md:text-7xl font-bold font-serif text-teal-900 leading-[1.1] mb-6 tracking-tight"
               >
-                Maisibelle <span className="text-peach-400 font-serif italic">x</span> BabyBets
+                Maisibelle <span className="text-peach-400 italic">x</span> BabyBets
               </motion.h1>
               
               <motion.p 
@@ -140,7 +140,7 @@ export const MaisibelleCollab = () => {
               <div className="inline-block p-3 bg-peach-50 rounded-full mb-4 text-peach-500">
                  <Heart fill="currentColor" size={24} />
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-teal-900 mb-4 tracking-tight">The Maisie Edit</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-serif text-teal-900 mb-4 tracking-tight">The Maisie Edit</h2>
               <p className="text-stone-500 text-lg max-w-2xl mx-auto">
                  Six hand-picked prizes chosen specifically for modern families. <br/>Limited tickets available for this collection.
               </p>
@@ -165,7 +165,7 @@ export const MaisibelleCollab = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-10">
                <div>
-                  <h3 className="text-2xl font-bold text-teal-900">More Ending Soon</h3>
+                  <h3 className="text-2xl font-bold font-serif text-teal-900">More Ending Soon</h3>
                   <p className="text-stone-500 text-sm">Don't miss out on these other favourites</p>
                </div>
                <Button variant="ghost" className="hidden sm:flex">View All</Button>
@@ -192,7 +192,7 @@ export const MaisibelleCollab = () => {
                <span className="text-sm font-bold tracking-wide">VIP Access</span>
             </div>
             
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Stay in the Loop</h2>
+            <h2 className="text-4xl md:text-6xl font-bold font-serif mb-6 tracking-tight">Stay in the Loop</h2>
             <p className="text-xl text-teal-100 mb-10 max-w-2xl mx-auto leading-relaxed">
                Join the subscriber list to get notified when Maisie's next edit drops, plus get exclusive discounts on your first ticket.
             </p>

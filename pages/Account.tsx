@@ -103,7 +103,7 @@ const ScratchGameOverlay = ({
                 <CheckCircle size={40} />
             </div>
             
-            <h2 className="text-3xl font-bold text-teal-900 mb-2">All Done!</h2>
+            <h2 className="text-3xl font-bold font-serif text-teal-900 mb-2">All Done!</h2>
             <p className="text-stone-500 mb-8">You've scratched all cards for this competition.</p>
             
             {wonTickets.length > 0 ? (
@@ -171,7 +171,7 @@ const ScratchGameOverlay = ({
                              <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
                                 <Trophy size={48} className="text-yellow-500" />
                              </div>
-                             <h2 className="text-3xl font-bold text-teal-900 mb-2">YOU WON!</h2>
+                             <h2 className="text-3xl font-bold font-serif text-teal-900 mb-2">YOU WON!</h2>
                              <div className="bg-teal-50 px-6 py-3 rounded-xl border border-teal-100 mb-6 w-full">
                                 <p className="text-[10px] uppercase font-bold text-teal-400 mb-1">Prize</p>
                                 <p className="text-xl font-bold text-teal-900">{activeTicket.winPrize}</p>
@@ -182,7 +182,7 @@ const ScratchGameOverlay = ({
                              <div className="w-24 h-24 bg-stone-100 rounded-full flex items-center justify-center mb-6">
                                 <Frown size={48} className="text-stone-400" />
                              </div>
-                             <h2 className="text-2xl font-bold text-stone-800 mb-2">Unlucky!</h2>
+                             <h2 className="text-2xl font-bold font-serif text-stone-800 mb-2">Unlucky!</h2>
                              <p className="text-stone-500 mb-6 text-sm">Better luck on the next one.</p>
                           </>
                        )}
@@ -305,14 +305,14 @@ export const Account = () => {
           <div className="col-span-1 lg:col-span-3">
              {activeTab === 'tickets' && (
                 <div>
-                   <h2 className="text-3xl font-bold text-teal-900 mb-8">My Tickets</h2>
+                   <h2 className="text-3xl font-bold font-serif text-teal-900 mb-8">My Tickets</h2>
                    
                    {purchasedTickets.length === 0 ? (
                       <div className="bg-white rounded-[2rem] p-12 text-center border border-cream-200">
                          <div className="w-20 h-20 bg-cream-50 rounded-full flex items-center justify-center mx-auto mb-6 text-stone-300">
                             <Ticket size={40} />
                          </div>
-                         <h3 className="text-xl font-bold text-stone-600 mb-2">No tickets yet</h3>
+                         <h3 className="text-xl font-bold font-serif text-stone-600 mb-2">No tickets yet</h3>
                          <p className="text-stone-400 mb-8">You haven't entered any competitions yet.</p>
                          <Link to="/competitions">
                            <Button>Browse Prizes</Button>
@@ -328,7 +328,7 @@ export const Account = () => {
                                   </div>
                                   <div className="flex-grow">
                                      <div className="flex justify-between items-start mb-2">
-                                        <h3 className="font-bold text-xl text-teal-900">{group.title}</h3>
+                                        <h3 className="font-bold font-serif text-xl text-teal-900">{group.title}</h3>
                                         {group.isInstant && (
                                            <Badge variant="urgent" className="flex items-center gap-1 bg-yellow-100 text-teal-900 border-yellow-200">
                                               <Zap size={10} fill="currentColor" /> Instant Win
@@ -383,7 +383,7 @@ export const Account = () => {
 
              {activeTab === 'wallet' && (
                 <div>
-                   <h2 className="text-3xl font-bold text-teal-900 mb-8">Wallet & Cards</h2>
+                   <h2 className="text-3xl font-bold font-serif text-teal-900 mb-8">Wallet & Cards</h2>
                    <div className="bg-white rounded-[2rem] p-8 border border-cream-200 max-w-lg">
                       <div className="bg-gradient-to-br from-teal-800 to-teal-600 text-white rounded-2xl p-6 shadow-xl mb-8 relative overflow-hidden">
                          <div className="absolute top-0 right-0 p-32 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
@@ -415,7 +415,7 @@ export const Account = () => {
              
              {activeTab === 'details' && (
                  <div className="bg-white rounded-[2rem] p-8 border border-cream-200">
-                    <h2 className="text-3xl font-bold text-teal-900 mb-8">Account Details</h2>
+                    <h2 className="text-3xl font-bold font-serif text-teal-900 mb-8">Account Details</h2>
                     <form className="space-y-6 max-w-lg">
                        <div className="grid grid-cols-2 gap-4">
                           <div>

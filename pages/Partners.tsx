@@ -33,7 +33,7 @@ export const Partners = () => {
         <div className="max-w-5xl mx-auto px-4 text-center">
           <Badge variant="peach" className="mb-6 px-4 py-1.5 text-xs tracking-widest bg-peach-300 text-teal-900 shadow-sm border-none">MUM CREATOR PROGRAM</Badge>
           
-          <h1 className="text-4xl md:text-6xl font-bold text-teal-900 mb-6 tracking-tight leading-[1.1]">
+          <h1 className="text-4xl md:text-6xl font-bold font-serif text-teal-900 mb-6 tracking-tight leading-[1.1]">
             Earn More & Grow Faster<br /> With <span className="text-teal-500 relative inline-block">BabyBets<span className="absolute bottom-2 left-0 w-full h-3 bg-peach-300/30 -z-10 rounded-full"></span></span>
           </h1>
           
@@ -95,7 +95,7 @@ export const Partners = () => {
 
       {/* --- INTRO TEXT --- */}
       <section className="py-20 max-w-4xl mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-teal-900 mb-6 tracking-tight">BabyBets Influencer & Creator Partnership</h2>
+        <h2 className="text-3xl md:text-4xl font-bold font-serif text-teal-900 mb-6 tracking-tight">BabyBets Influencer & Creator Partnership</h2>
         <p className="text-stone-600 text-lg leading-relaxed mb-8">
           BabyBets is a brand-new UK competition and raffle platform created specifically for mums and families. 
           We give away the prizes parents actually want — pram bundles, nursery makeovers, car seats, toys, spa breaks, family holidays and more.
@@ -125,7 +125,7 @@ export const Partners = () => {
            <div className="inline-flex items-center gap-2 bg-peach-300 text-teal-900 px-4 py-1 rounded-full text-sm font-bold mb-6">
              <Ticket size={16} /> Affiliate Program
            </div>
-           <h2 className="text-4xl md:text-5xl font-bold mb-16 tracking-tight">Earn £££ from Every Ticket Sale</h2>
+           <h2 className="text-4xl md:text-5xl font-bold font-serif mb-16 tracking-tight">Earn £££ from Every Ticket Sale</h2>
            
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
@@ -151,7 +151,7 @@ export const Partners = () => {
       <section className="py-24 bg-cream-50">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-[3rem] shadow-xl border border-cream-200 p-8 md:p-16 text-center">
-            <h2 className="text-3xl font-bold text-teal-900 mb-2">Calculate Your Earnings</h2>
+            <h2 className="text-3xl font-bold font-serif text-teal-900 mb-2">Calculate Your Earnings</h2>
             <p className="text-stone-500 mb-12">See what you could earn with BabyBets</p>
             
             <div className="bg-cream-50 rounded-3xl p-8 mb-10 border border-cream-100">
@@ -201,7 +201,7 @@ export const Partners = () => {
                {/* Brand Ambassador */}
                <div className="bg-peach-100 rounded-[2.5rem] p-8 md:p-12 border-2 border-peach-200 relative overflow-hidden order-1 md:order-2">
                   <div className="absolute top-0 right-0 bg-peach-300 text-teal-900 text-xs font-bold px-4 py-2 rounded-bl-2xl">RECOMMENDED</div>
-                  <h3 className="text-2xl font-bold text-teal-900 mb-2">Brand Ambassador</h3>
+                  <h3 className="text-2xl font-bold font-serif text-teal-900 mb-2">Brand Ambassador</h3>
                   <p className="text-stone-600 mb-8 text-sm">For established creators with larger, highly engaged audiences.</p>
                   
                   <div className="bg-white rounded-2xl p-6 mb-8 shadow-sm">
@@ -237,7 +237,7 @@ export const Partners = () => {
 
                {/* Affiliate */}
                <div className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-cream-200 order-2 md:order-1">
-                  <h3 className="text-2xl font-bold text-teal-900 mb-2">Affiliate Programme</h3>
+                  <h3 className="text-2xl font-bold font-serif text-teal-900 mb-2">Affiliate Programme</h3>
                   <p className="text-stone-500 mb-8 text-sm">For growing creators who want to start earning by sharing our competitions.</p>
                   
                   <div className="bg-cream-50 rounded-2xl p-6 mb-8 border border-cream-100">

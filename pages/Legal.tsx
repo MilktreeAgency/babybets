@@ -11,10 +11,10 @@ export const Legal = () => {
     <div className="bg-cream-50 min-h-screen py-20">
       <div className="max-w-4xl mx-auto px-4">
          <div className="bg-white rounded-[2.5rem] p-8 md:p-16 shadow-sm border border-cream-200">
-            <h1 className="text-4xl font-bold text-teal-900 mb-4">{title}</h1>
+            <h1 className="text-4xl font-bold font-serif text-teal-900 mb-4">{title}</h1>
             <p className="text-stone-400 text-sm mb-12">Last Updated: {updatedDate}</p>
             
-            <div className="prose prose-stone prose-lg max-w-none prose-headings:text-teal-900 prose-a:text-teal-600">
+            <div className="prose prose-stone prose-lg max-w-none prose-headings:text-teal-900 prose-headings:font-serif prose-a:text-teal-600">
                {isPrivacy ? (
                  <>
                    <h3>1. Introduction</h3>

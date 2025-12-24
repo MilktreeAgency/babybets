@@ -31,7 +31,7 @@ export const Winners = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="text-center mb-20">
-           <h1 className="text-5xl md:text-6xl font-bold text-teal-900 mb-6 tracking-tight">Our Winners</h1>
+           <h1 className="text-5xl md:text-6xl font-bold font-serif text-teal-900 mb-6 tracking-tight">Our Winners</h1>
            <p className="text-stone-600 max-w-2xl mx-auto text-lg leading-relaxed">
              Transparency is our #1 priority. Every draw is live-streamed, and winners are contacted immediately. These are real families winning real prizes.
            </p>
@@ -53,7 +53,7 @@ export const Winners = () => {
                </div>
                <div className="p-8">
                  <div className="flex justify-between items-start mb-3">
-                   <h2 className="font-bold text-2xl text-teal-900">{winner.name}</h2>
+                   <h2 className="font-bold font-serif text-2xl text-teal-900">{winner.name}</h2>
                    <time className="text-stone-400 text-sm font-medium pt-1">{winner.date}</time>
                  </div>
                  <p className="text-teal-500 font-bold mb-6 flex items-center gap-1">
@@ -81,7 +81,7 @@ export const Winners = () => {
         
         {/* Trust Section */}
         <section className="mt-20 text-center bg-white p-12 rounded-[2rem] border border-cream-200">
-          <h2 className="text-2xl font-bold text-teal-900 mb-4">Every Winner is Real</h2>
+          <h2 className="text-2xl font-bold font-serif text-teal-900 mb-4">Every Winner is Real</h2>
           <p className="text-stone-600 max-w-2xl mx-auto mb-6">
             All our draws are conducted live on Facebook. Winners are contacted immediately and prizes are delivered within 14 days. 
             We take photos with every winner and share their stories with permission.

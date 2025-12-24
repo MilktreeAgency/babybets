@@ -38,7 +38,7 @@ export const Checkout = () => {
   if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-cream-50 pt-24 text-center px-4">
-        <h2 className="text-3xl font-bold text-teal-900 mb-6">Your basket is empty</h2>
+        <h2 className="text-3xl font-bold font-serif text-teal-900 mb-6">Your basket is empty</h2>
         <Link to="/competitions">
           <Button>Find a Prize</Button>
         </Link>
@@ -53,13 +53,13 @@ export const Checkout = () => {
   return (
     <div className="min-h-screen bg-cream-50 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-teal-900 mb-10 tracking-tight">Secure Checkout</h1>
+        <h1 className="text-4xl font-bold font-serif text-teal-900 mb-10 tracking-tight">Secure Checkout</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Order Summary */}
           <div className="order-2 lg:order-1">
              <div className="bg-white p-8 rounded-[2rem] shadow-sm border border-cream-200">
-               <h3 className="font-bold text-xl text-teal-900 mb-8 flex items-center gap-2">
+               <h3 className="font-bold font-serif text-xl text-teal-900 mb-8 flex items-center gap-2">
                  Your Order <span className="text-stone-400 text-sm font-normal">({cart.length} items)</span>
                </h3>
                <div className="space-y-8">
@@ -137,7 +137,7 @@ export const Checkout = () => {
           <div className="order-1 lg:order-2">
             <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-cream-100">
               
-              <h3 className="font-bold text-xl text-teal-900 mb-6">Express Checkout</h3>
+              <h3 className="font-bold font-serif text-xl text-teal-900 mb-6">Express Checkout</h3>
               
               <div className="grid grid-cols-2 gap-4 mb-8">
                  {/* Apple Pay Button - Official Style */}
@@ -182,7 +182,7 @@ export const Checkout = () => {
               </div>
 
               <form onSubmit={handleFakePayment}>
-                <h3 className="font-bold text-xl text-teal-900 mb-8">Contact & Payment</h3>
+                <h3 className="font-bold font-serif text-xl text-teal-900 mb-8">Contact & Payment</h3>
                 
                 <div className="space-y-6 mb-10">
                   <div>

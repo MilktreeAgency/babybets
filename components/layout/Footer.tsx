@@ -103,7 +103,7 @@ export const Footer = () => {
           </div>
 
           <nav aria-label="Competition categories">
-            <h4 className="font-bold text-peach-300 mb-6 uppercase tracking-wider text-xs">Competitions</h4>
+            <h4 className="font-bold font-serif text-peach-300 mb-6 uppercase tracking-wider text-xs">Competitions</h4>
             <ul className="space-y-3 text-sm font-medium text-teal-50">
               <li><Link to="/competitions?cat=nursery" className="hover:text-peach-300 transition">Nursery & Gear</Link></li>
               <li><Link to="/competitions?cat=toys" className="hover:text-peach-300 transition">Tech & Toys</Link></li>
@@ -125,7 +125,7 @@ export const Footer = () => {
           </nav>
 
           <nav aria-label="Support and legal">
-            <h4 className="font-bold text-peach-300 mb-6 uppercase tracking-wider text-xs">Support & Trust</h4>
+            <h4 className="font-bold font-serif text-peach-300 mb-6 uppercase tracking-wider text-xs">Support & Trust</h4>
             <ul className="space-y-3 text-sm font-medium text-teal-50">
               <li><Link to="/how-it-works" className="hover:text-peach-300 transition">How it Works</Link></li>
               <li><Link to="/partners" className="hover:text-peach-300 transition text-peach-300">Influencer Program</Link></li>
@@ -137,7 +137,7 @@ export const Footer = () => {
           </nav>
 
           <div>
-            <h4 className="font-bold text-peach-300 mb-6 uppercase tracking-wider text-xs">Get in Touch</h4>
+            <h4 className="font-bold font-serif text-peach-300 mb-6 uppercase tracking-wider text-xs">Get in Touch</h4>
             <p className="text-sm text-teal-100 mb-4">Need help? Our parent support team is here Mon-Fri.</p>
             <a href="mailto:hello@babybets.com" className="inline-flex items-center text-sm font-bold text-white hover:text-peach-300 transition">
               <Mail size={16} className="mr-2" aria-hidden="true" /> hello@babybets.com
