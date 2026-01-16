@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, Menu, X, Gift, User, Zap, LogOut, ChevronDown } from 'lucide-react';
 import { useStore } from '../../store';
@@ -12,12 +12,35 @@ export const Navbar = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   
   const cartTotal = useStore(state => state.cart.length);
   const setCartOpen = useStore(state => state.setCartOpen);
   const location = useLocation();
   
   const { user, profile, isLoading, signOut } = useAuth();
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    if (isUserMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
+
+  // Close user menu on route change
+  useEffect(() => {
+    setIsUserMenuOpen(false);
+  }, [location.pathname]);
 
   const openAuth = (mode: 'signin' | 'signup') => {
     setAuthModalMode(mode);
@@ -102,10 +125,13 @@ export const Navbar = () => {
                 <div className="w-20 h-10 bg-cream-100 rounded-xl animate-pulse" />
               ) : user ? (
                 // Logged in state
-                <div className="relative">
+                <div className="relative" ref={userMenuRef}>
                   <button
+                    type="button"
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cream-50 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cream-50 transition-colors cursor-pointer"
+                    aria-expanded={isUserMenuOpen}
+                    aria-haspopup="true"
                   >
                     <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-sm">
                       {getUserInitials()}
@@ -123,19 +149,20 @@ export const Navbar = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
-                        className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-cream-200 py-2 z-50"
+                        className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-cream-200 py-2 z-[60]"
                       >
                         <Link
                           to="/account"
                           onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-stone-700 hover:bg-cream-50 transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-stone-700 hover:bg-cream-50 transition-colors"
                         >
                           <User size={16} />
                           My Account
                         </Link>
                         <button
+                          type="button"
                           onClick={handleSignOut}
-                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 transition-colors"
+                          className="w-full flex items-center gap-3 px-4 py-3 text-sm text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer"
                         >
                           <LogOut size={16} />
                           Sign Out
