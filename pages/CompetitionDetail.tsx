@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { competitions } from '../mockData';
 import { useStore } from '../store';
 import { Button, Badge, ProgressBar } from '../components/ui';
-import { Check, Info, Clock, Share2, HelpCircle, ShieldCheck, Ticket, Plus, Minus } from 'lucide-react';
+import { Check, Info, Clock, Share2, HelpCircle, ShieldCheck, Ticket, Plus, Minus, Zap, Gift } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
-import { Competition, TicketBundle } from '../types';
+import { Competition, TicketBundle, TieredPricingTier } from '../types';
+import { calculatePricingDetails, penceToPounds, formatPrice } from '../utils/pricing';
+import { PrizeTiersSection } from '../components/competitions';
 
-// Helper to calculate best price based on bundles
+// Helper to calculate best price based on bundles (legacy)
 const calculateBestPrice = (qty: number, bundles: TicketBundle[], unitPrice: number): number => {
   if (qty <= 0) return 0;
   
@@ -36,6 +38,11 @@ const calculateBestPrice = (qty: number, bundles: TicketBundle[], unitPrice: num
   }
 
   return total;
+};
+
+// Check if competition uses tiered pricing
+const usesTieredPricing = (competition: Competition): boolean => {
+  return !!(competition.tieredPricing && competition.tieredPricing.length > 0);
 };
 
 // Helper to generate competition schema
@@ -103,23 +110,63 @@ export const CompetitionDetail = () => {
   const competition = competitions.find(c => c.slug === slug) || competitions[0];
   const { addToCart } = useStore();
   
-  // Initialize with the quantity of the first bundle or 1
-  const [quantity, setQuantity] = useState(competition.bundles[0]?.quantity || 1);
+  // Check if this competition uses tiered pricing
+  const hasTieredPricing = usesTieredPricing(competition);
+  const basePricePence = (competition.baseTicketPriceGBP || competition.ticketPriceGBP) * 100;
+  
+  // Initialize with 10 for tiered pricing competitions, otherwise first bundle
+  const [quantity, setQuantity] = useState(hasTieredPricing ? 10 : (competition.bundles[0]?.quantity || 1));
   const [totalPrice, setTotalPrice] = useState(0);
+  const [savingsAmount, setSavingsAmount] = useState(0);
+  const [pricePerTicket, setPricePerTicket] = useState(0);
   const [shareText, setShareText] = useState('Share');
 
-  // Available tickets logic
+  // Available tickets logic - use maxTicketsPerUser for tiered pricing comps
   const ticketsLeft = competition.maxTickets - competition.ticketsSold;
-  const maxPurchase = Math.min(ticketsLeft, 100); // Cap slider at 100 or remaining tickets
+  const maxPurchase = hasTieredPricing 
+    ? Math.min(ticketsLeft, competition.maxTicketsPerUser || 500)
+    : Math.min(ticketsLeft, 100);
 
   // Fallback bundles
   const bundles = competition.bundles.length > 0 ? competition.bundles : [{ quantity: 1, price: competition.ticketPriceGBP }];
 
+  // Quick-select options for tiered pricing
+  const quickSelectOptions = useMemo(() => {
+    if (!hasTieredPricing || !competition.tieredPricing) return [];
+    
+    return [10, 20, 40, 60].map(qty => {
+      const details = calculatePricingDetails(qty, competition.tieredPricing!, basePricePence);
+      return {
+        quantity: qty,
+        totalPrice: details.totalPriceGBP,
+        savings: details.savingsGBP,
+        label: qty === 60 ? 'Best Value' : (details.savingsGBP > 0 ? `Save £${details.savingsGBP.toFixed(0)}` : undefined),
+      };
+    });
+  }, [hasTieredPricing, competition.tieredPricing, basePricePence]);
+
   // Recalculate price when quantity changes
   useEffect(() => {
-    const price = calculateBestPrice(quantity, bundles, competition.ticketPriceGBP);
-    setTotalPrice(price);
-  }, [quantity, bundles, competition.ticketPriceGBP]);
+    if (hasTieredPricing && competition.tieredPricing) {
+      // Use tiered pricing
+      const details = calculatePricingDetails(quantity, competition.tieredPricing, basePricePence);
+      setTotalPrice(details.totalPriceGBP);
+      setSavingsAmount(details.savingsGBP);
+      setPricePerTicket(details.pricePerTicketGBP);
+    } else {
+      // Use legacy bundle pricing
+      const price = calculateBestPrice(quantity, bundles, competition.ticketPriceGBP);
+      setTotalPrice(price);
+      setSavingsAmount(0);
+      setPricePerTicket(price / quantity);
+    }
+  }, [quantity, bundles, competition.ticketPriceGBP, hasTieredPricing, competition.tieredPricing, basePricePence]);
+
+  // Count instant win prizes
+  const instantWinCount = useMemo(() => {
+    if (!competition.instantWinPrizes) return 0;
+    return competition.instantWinPrizes.reduce((sum, p) => sum + p.totalQuantity, 0);
+  }, [competition.instantWinPrizes]);
 
   const handleAddToCart = () => {
     addToCart({
@@ -222,25 +269,77 @@ export const CompetitionDetail = () => {
                   <p>All prizes are brand new, genuine UK stock and come with full manufacturer warranty where applicable.</p>
                </div>
             </div>
+            
+            {/* Prize Tiers Section - for instant win competitions */}
+            {competition.instantWin && competition.instantWinPrizes && competition.instantWinPrizes.length > 0 && (
+              <PrizeTiersSection 
+                prizes={competition.instantWinPrizes.map(p => ({
+                  id: p.id,
+                  name: p.name,
+                  short_name: p.shortName,
+                  type: p.type,
+                  value_gbp: p.valueGBP,
+                  cash_alternative_gbp: p.cashAlternativeGBP,
+                  total_quantity: p.totalQuantity,
+                  remaining_quantity: p.remainingQuantity,
+                  description: p.description,
+                  image_url: p.image,
+                  tier: p.type === 'Physical' ? 1 : p.type === 'Voucher' ? 2 : p.type === 'Cash' ? 3 : 4,
+                }))}
+              />
+            )}
           </div>
 
           {/* Right: Actions */}
           <div>
-             <div className="mb-3 flex items-center gap-2">
+             <div className="mb-3 flex items-center gap-2 flex-wrap">
                 <span className="bg-teal-100 text-teal-800 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider">{competition.category}</span>
+                {competition.instantWin && (
+                  <span className="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider flex items-center gap-1">
+                    <Zap size={12} fill="currentColor" /> Instant Win
+                  </span>
+                )}
                 {competition.status === 'ending_soon' && <span className="bg-rose-100 text-rose-600 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider">Ending Soon</span>}
              </div>
              <h1 className="text-4xl lg:text-5xl font-bold font-serif text-teal-900 mb-6 tracking-tight leading-tight">Win {competition.title}</h1>
              
+             {/* Instant Win Banner */}
+             {competition.instantWin && instantWinCount > 0 && (
+               <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-peach-50 rounded-2xl border border-yellow-200">
+                 <div className="flex items-center gap-3">
+                   <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                     <Zap className="text-yellow-600" size={24} fill="currentColor" />
+                   </div>
+                   <div>
+                     <p className="font-bold text-teal-900">Over {instantWinCount.toLocaleString()} Instant Win Prizes!</p>
+                     <p className="text-sm text-stone-600">Win instantly when you scratch + every ticket enters the end prize draw</p>
+                   </div>
+                 </div>
+                 {competition.endPrize && (
+                   <div className="mt-3 pt-3 border-t border-yellow-200 flex items-center gap-2 text-sm">
+                     <Gift size={16} className="text-teal-600" />
+                     <span className="text-stone-600">End prize draw: <span className="font-bold text-teal-900">£{competition.endPrize.valueGBP} Cash</span></span>
+                   </div>
+                 )}
+               </div>
+             )}
+             
              <div className="flex items-center gap-6 mb-10 p-6 bg-white rounded-2xl border border-cream-200 shadow-sm">
                <div>
-                 <p className="text-xs font-bold text-stone-400 uppercase mb-1">Ticket Price</p>
-                 <div className="text-4xl font-bold text-teal-500">£{competition.ticketPriceGBP}</div>
+                 <p className="text-xs font-bold text-stone-400 uppercase mb-1">
+                   {hasTieredPricing ? 'From' : 'Ticket Price'}
+                 </p>
+                 <div className="text-4xl font-bold text-teal-500">
+                   £{hasTieredPricing ? '1.70' : competition.ticketPriceGBP.toFixed(2)}
+                 </div>
+                 {hasTieredPricing && (
+                   <p className="text-xs text-stone-400 mt-1">per ticket (60+ tickets)</p>
+                 )}
                </div>
                <div className="h-10 w-px bg-cream-200"></div>
                <div>
-                 <p className="text-xs font-bold text-stone-400 uppercase mb-1">Prize Value</p>
-                 <div className="text-xl font-bold text-teal-900">£{competition.retailValueGBP.toLocaleString()}</div>
+                 <p className="text-xs font-bold text-stone-400 uppercase mb-1">Total Prize Value</p>
+                 <div className="text-xl font-bold text-teal-900">£{(competition.totalValueGBP || competition.retailValueGBP).toLocaleString()}</div>
                </div>
              </div>
 
@@ -257,12 +356,49 @@ export const CompetitionDetail = () => {
              {/* Ticket Selector Area */}
              <div className="mb-10">
                 <h3 className="font-bold font-serif text-teal-900 mb-4 flex items-center gap-2 text-lg">
-                   Select Entry Bundle
+                   {hasTieredPricing ? 'Choose Your Tickets' : 'Select Entry Bundle'}
                 </h3>
                 
-                {/* Bundles Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                   {bundles.map((bundle, idx) => (
+                {/* Tiered Pricing Quick Select */}
+                {hasTieredPricing && quickSelectOptions.length > 0 ? (
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {quickSelectOptions.map((option, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setQuantity(option.quantity)}
+                        className={`relative p-5 rounded-2xl border-2 transition-all text-left ${
+                          quantity === option.quantity 
+                            ? 'border-teal-500 bg-teal-50 ring-1 ring-teal-500' 
+                            : 'border-cream-200 bg-white hover:border-teal-200'
+                        }`}
+                      >
+                        {option.label && (
+                          <span className={`absolute -top-3 right-4 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-sm ${
+                            option.label === 'Best Value' 
+                              ? 'bg-peach-300 text-teal-900' 
+                              : 'bg-green-100 text-green-700'
+                          }`}>
+                            {option.label}
+                          </span>
+                        )}
+                        <div className="font-bold text-2xl text-teal-900 mb-1">
+                          {option.quantity} <span className="text-sm font-bold text-teal-400 uppercase">tickets</span>
+                        </div>
+                        <div className="text-stone-500 font-medium text-sm">
+                          £{option.totalPrice.toFixed(2)} total
+                        </div>
+                        {option.savings > 0 && (
+                          <div className="text-green-600 font-bold text-xs mt-1">
+                            You save £{option.savings.toFixed(2)}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  /* Legacy Bundles Grid */
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {bundles.map((bundle, idx) => (
                       <button
                         key={idx}
                         onClick={() => setQuantity(bundle.quantity)}
@@ -273,15 +409,16 @@ export const CompetitionDetail = () => {
                         }`}
                       >
                         {bundle.label && (
-                           <span className="absolute -top-3 right-4 bg-peach-300 text-teal-900 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-sm">
-                             {bundle.label}
-                           </span>
+                          <span className="absolute -top-3 right-4 bg-peach-300 text-teal-900 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                            {bundle.label}
+                          </span>
                         )}
                         <div className="font-bold text-2xl text-teal-900 mb-1">{bundle.quantity} <span className="text-sm font-bold text-teal-400 uppercase">tickets</span></div>
                         <div className="text-stone-500 font-medium text-sm">£{bundle.price.toFixed(2)} total</div>
                       </button>
-                   ))}
-                </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Custom Amount Slider */}
                 <div className="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm">
@@ -332,16 +469,21 @@ export const CompetitionDetail = () => {
              <div className="sticky bottom-4 lg:static z-20">
                 <div className="bg-teal-900 text-white p-6 rounded-[2rem] shadow-2xl flex flex-col gap-5">
                   <div className="flex justify-between items-center border-b border-teal-700 pb-4">
-                     <span className="text-teal-200 font-medium">Total Price</span>
+                     <div>
+                       <span className="text-teal-200 font-medium block">Total Price</span>
+                       {savingsAmount > 0 && (
+                         <span className="text-green-400 text-sm font-bold">You save £{savingsAmount.toFixed(2)}</span>
+                       )}
+                     </div>
                      <div className="text-right">
                        <span className="block text-3xl font-bold">£{totalPrice.toFixed(2)}</span>
                        {quantity > 1 && (
-                         <span className="text-xs text-teal-300 font-medium">£{(totalPrice / quantity).toFixed(2)} per ticket</span>
+                         <span className="text-xs text-teal-300 font-medium">£{pricePerTicket.toFixed(2)} per ticket</span>
                        )}
                      </div>
                   </div>
                   <Button onClick={handleAddToCart} variant="peach" size="lg" className="w-full text-lg shadow-none py-5">
-                     Enter Competition
+                     {competition.instantWin ? 'Enter & Win Instantly' : 'Enter Competition'}
                   </Button>
                   <p className="text-[10px] text-teal-300/60 text-center leading-tight">
                     By entering, you agree to our Terms & Conditions. <br/>

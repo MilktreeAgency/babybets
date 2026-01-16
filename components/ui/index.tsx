@@ -94,3 +94,12 @@ export const TrustItem = ({ icon: Icon, title, desc }: { icon: LucideIcon, title
 
 // Export Modal Components
 export { PartnerApplicationModal } from './PartnerApplicationModal';
+export { CashAlternativeModal } from './CashAlternativeModal';
+
+// Export Prize Image Components
+export { 
+  SiteCreditCard, 
+  PrizeImage, 
+  isSiteCreditImage, 
+  parseSiteCreditAmount 
+} from './SiteCreditCard';

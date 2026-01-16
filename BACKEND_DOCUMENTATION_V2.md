@@ -1,7 +1,7 @@
 # BabyBets Backend Documentation v2.0
 
-**Document Version:** 2.0  
-**Last Updated:** December 21, 2025  
+**Document Version:** 2.1  
+**Last Updated:** January 16, 2026  
 **Status:** SPECIFICATION - Production-Ready Architecture  
 **Payment Provider:** Cashflows ([Developer Portal](https://developer.cashflows.com/))
 
@@ -1926,6 +1926,270 @@ This documentation is a specification. The current codebase has **no backend**. 
 
 ---
 
-**END OF DOCUMENTATION v2.0**
+## 14. Tiered Pricing & Ticket Code Pool System (v2.1)
+
+### Overview
+
+This section documents the tiered pricing system and pre-generated ticket code pool for instant win competitions, implemented for the iCandy Mega Mum Bundle competition (January 2026).
+
+### 14.1 Tiered Pricing Tables
+
+#### `tiered_pricing_tiers`
+```sql
+CREATE TABLE tiered_pricing_tiers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  competition_id UUID REFERENCES competitions(id) ON DELETE CASCADE,
+  min_qty INTEGER NOT NULL,
+  max_qty INTEGER, -- NULL means unlimited
+  price_per_ticket_pence INTEGER NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT check_qty_range CHECK (min_qty > 0 AND (max_qty IS NULL OR max_qty >= min_qty)),
+  CONSTRAINT check_price_positive CHECK (price_per_ticket_pence > 0)
+);
+
+CREATE INDEX idx_tiered_pricing_competition ON tiered_pricing_tiers(competition_id);
+```
+
+**Example Data (iCandy Mega Mum Bundle):**
+| min_qty | max_qty | price_per_ticket_pence |
+|---------|---------|------------------------|
+| 1       | 9       | 200                    |
+| 10      | 19      | 190                    |
+| 20      | 39      | 185                    |
+| 40      | 59      | 180                    |
+| 60      | NULL    | 170                    |
+
+### 14.2 Ticket Code Pool System
+
+#### `ticket_code_pools`
+```sql
+CREATE TABLE ticket_code_pools (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  competition_id UUID REFERENCES competitions(id) ON DELETE CASCADE,
+  total_codes INTEGER NOT NULL,
+  code_length INTEGER DEFAULT 7,
+  is_locked BOOLEAN DEFAULT FALSE,
+  generated_at TIMESTAMP,
+  generated_by UUID REFERENCES users(id),
+  locked_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT check_code_length CHECK (code_length BETWEEN 6 AND 10),
+  CONSTRAINT unique_pool_per_competition UNIQUE (competition_id)
+);
+
+CREATE INDEX idx_ticket_pools_competition ON ticket_code_pools(competition_id);
+```
+
+#### `ticket_codes`
+```sql
+CREATE TABLE ticket_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pool_id UUID REFERENCES ticket_code_pools(id) ON DELETE CASCADE,
+  code VARCHAR(20) NOT NULL,
+  is_allocated BOOLEAN DEFAULT FALSE,
+  allocated_at TIMESTAMP,
+  ticket_id UUID REFERENCES tickets(id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT unique_code_per_pool UNIQUE (pool_id, code)
+);
+
+CREATE INDEX idx_ticket_codes_pool ON ticket_codes(pool_id);
+CREATE INDEX idx_ticket_codes_available ON ticket_codes(pool_id, is_allocated) 
+  WHERE is_allocated = FALSE;
+CREATE INDEX idx_ticket_codes_code ON ticket_codes(code);
+```
+
+#### `prize_allocations`
+```sql
+CREATE TABLE prize_allocations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pool_id UUID REFERENCES ticket_code_pools(id) ON DELETE CASCADE,
+  ticket_code_id UUID REFERENCES ticket_codes(id) ON DELETE CASCADE,
+  prize_id UUID REFERENCES instant_win_prizes(id),
+  is_claimed BOOLEAN DEFAULT FALSE,
+  claimed_at TIMESTAMP,
+  claimed_by_user_id UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT unique_allocation UNIQUE (ticket_code_id)
+);
+
+CREATE INDEX idx_prize_allocations_pool ON prize_allocations(pool_id);
+CREATE INDEX idx_prize_allocations_prize ON prize_allocations(prize_id);
+CREATE INDEX idx_prize_allocations_unclaimed ON prize_allocations(pool_id, is_claimed)
+  WHERE is_claimed = FALSE;
+```
+
+### 14.3 Wallet/Site Credit System
+
+#### `wallet_credits`
+```sql
+CREATE TABLE wallet_credits (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  amount_gbp DECIMAL(10,2) NOT NULL,
+  remaining_gbp DECIMAL(10,2) NOT NULL,
+  status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'spent', 'expired', 'revoked')),
+  issued_at TIMESTAMP DEFAULT NOW(),
+  expires_at TIMESTAMP NOT NULL,
+  source_competition_id UUID REFERENCES competitions(id),
+  source_order_id UUID REFERENCES orders(id),
+  source_ticket_id UUID REFERENCES tickets(id),
+  source_prize_id UUID REFERENCES instant_win_prizes(id),
+  description TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  
+  CONSTRAINT check_positive_amount CHECK (amount_gbp > 0),
+  CONSTRAINT check_remaining CHECK (remaining_gbp >= 0 AND remaining_gbp <= amount_gbp)
+);
+
+CREATE INDEX idx_wallet_credits_user ON wallet_credits(user_id);
+CREATE INDEX idx_wallet_credits_active ON wallet_credits(user_id, status, expires_at)
+  WHERE status = 'active';
+CREATE INDEX idx_wallet_credits_expiring ON wallet_credits(expires_at)
+  WHERE status = 'active';
+```
+
+#### `wallet_transactions`
+```sql
+CREATE TABLE wallet_transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id),
+  credit_id UUID REFERENCES wallet_credits(id),
+  transaction_type VARCHAR(20) CHECK (transaction_type IN ('credit', 'debit', 'expiry', 'revocation')),
+  amount_gbp DECIMAL(10,2) NOT NULL,
+  balance_after_gbp DECIMAL(10,2) NOT NULL,
+  order_id UUID REFERENCES orders(id),
+  description TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_wallet_transactions_user ON wallet_transactions(user_id, created_at DESC);
+CREATE INDEX idx_wallet_transactions_credit ON wallet_transactions(credit_id);
+```
+
+### 14.4 Cash Alternative & Fulfillment
+
+#### `winner_fulfillments`
+```sql
+CREATE TABLE winner_fulfillments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  ticket_id UUID REFERENCES tickets(id),
+  prize_id UUID REFERENCES instant_win_prizes(id),
+  user_id UUID REFERENCES users(id),
+  competition_id UUID REFERENCES competitions(id),
+  
+  -- Prize choice
+  has_cash_alternative BOOLEAN DEFAULT FALSE,
+  cash_alternative_gbp DECIMAL(10,2),
+  choice VARCHAR(20) CHECK (choice IN ('prize', 'cash', 'pending')),
+  choice_deadline TIMESTAMP,
+  choice_made_at TIMESTAMP,
+  was_auto_defaulted BOOLEAN DEFAULT FALSE,
+  
+  -- Fulfillment status
+  status VARCHAR(30) DEFAULT 'pending' CHECK (status IN (
+    'pending', 'prize_selected', 'cash_selected', 'processing', 
+    'dispatched', 'delivered', 'completed', 'expired'
+  )),
+  value_gbp DECIMAL(10,2) NOT NULL,
+  
+  -- Contact & delivery
+  notified_at TIMESTAMP,
+  responded_at TIMESTAMP,
+  dispatched_at TIMESTAMP,
+  delivered_at TIMESTAMP,
+  tracking_number VARCHAR(100),
+  delivery_address JSONB,
+  notes TEXT,
+  
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_fulfillments_user ON winner_fulfillments(user_id);
+CREATE INDEX idx_fulfillments_status ON winner_fulfillments(status);
+CREATE INDEX idx_fulfillments_pending_choice ON winner_fulfillments(choice_deadline)
+  WHERE choice = 'pending';
+```
+
+### 14.5 New API Endpoints
+
+#### Competition Pool Management (Admin)
+```
+POST /api/admin/competitions/{id}/generate-pool
+  Request: { codeLength?: number }
+  Response: { poolId, totalCodes, generatedAt }
+  
+POST /api/admin/competitions/{id}/lock-pool
+  Response: { success, lockedAt }
+  
+GET /api/admin/competitions/{id}/pool-stats
+  Response: { totalCodes, allocated, available, prizeAllocations: [...] }
+```
+
+#### Ticket Reveal
+```
+POST /api/tickets/{id}/reveal
+  Response: { 
+    ticketId, ticketCode, isWinner, 
+    prize?: { id, name, type, value, cashAlternative, image },
+    verificationSecret
+  }
+```
+
+#### Prize Choice
+```
+POST /api/tickets/{id}/choose-prize
+  Request: { choice: 'prize' | 'cash' }
+  Response: { fulfillmentId, choice, value }
+  
+GET /api/tickets/{id}/fulfillment
+  Response: { status, choice, trackingNumber, ... }
+```
+
+#### Wallet
+```
+GET /api/users/me/wallet
+  Response: { 
+    availableBalance, 
+    expiringSoon, 
+    nextExpiryDate,
+    credits: [...] 
+  }
+  
+POST /api/checkout/apply-credit
+  Request: { amount: number }
+  Response: { applied, maxAllowed, remaining }
+  
+DELETE /api/checkout/credit
+  Response: { success }
+```
+
+### 14.6 Wallet Rules
+
+| Rule | Value | Description |
+|------|-------|-------------|
+| Max basket % | 50% | Maximum percentage of basket payable with credit |
+| Expiry | 60 days | Credits expire after 60 days |
+| Withdrawable | No | Credits cannot be withdrawn as cash |
+| Exchangeable | No | Credits cannot be exchanged for cash |
+
+### 14.7 Background Jobs (Additions)
+
+| Job | Frequency | Purpose |
+|-----|-----------|---------|
+| `expireWalletCredits` | Hourly | Mark expired credits as 'expired' |
+| `autoDefaultPrizeChoice` | Daily 10 AM | Auto-select cash for pending choices past deadline |
+| `sendPrizeChoiceReminders` | Daily 9 AM | Email users with pending prize choices |
+
+---
+
+**END OF DOCUMENTATION v2.1**
 
 

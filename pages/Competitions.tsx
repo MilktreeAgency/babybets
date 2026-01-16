@@ -168,7 +168,7 @@ export const Competitions = () => {
                   }
                 </h1>
                 <p className="text-stone-500 max-w-2xl">
-                   Discover our latest competitions. Choose your lucky numbers and enter for a chance to win dream prizes delivered to your door.
+                   Enter our instant win competition for a chance to win premium iCandy prams, car seats, vouchers and cash prizes. Over 1,900 instant wins available!
                 </p>
              </div>
              

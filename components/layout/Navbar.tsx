@@ -13,9 +13,8 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: 'Competitions', path: '/competitions' },
-    { name: 'Winners', path: '/winners' },
+    // { name: 'Winners', path: '/winners' },
     { name: 'How it Works', path: '/how-it-works' },
-    { name: 'Maisibelle Edit', path: '/maisibelle-x-babybets' },
     { name: 'Partners', path: '/partners' },
   ];
 
@@ -53,12 +52,6 @@ export const Navbar = () => {
                   }`}
                 >
                   {link.name}
-                  {link.name === 'Maisibelle Edit' && (
-                    <span className="ml-1.5 flex h-2 w-2 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-peach-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-peach-500"></span>
-                    </span>
-                  )}
                 </Link>
               ))}
             </div>

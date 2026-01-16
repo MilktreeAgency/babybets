@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../store';
 import { Button, Badge } from '../components/ui';
-import { Ticket, CreditCard, User, LogOut, Zap, Trophy, Gift, X, CheckCircle, ArrowRight, Frown, Plus } from 'lucide-react';
+import { Ticket, CreditCard, User, LogOut, Zap, Trophy, Gift, X, CheckCircle, ArrowRight, Frown, Plus, Wallet } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { PurchasedTicket } from '../types';
+import { WalletSection } from '../components/wallet';
 
 interface GroupedCompetition {
   id: string;
@@ -208,7 +209,7 @@ const ScratchGameOverlay = ({
 
 
 export const Account = () => {
-  const { purchasedTickets, revealTicket } = useStore();
+  const { purchasedTickets, revealTicket, walletCredits } = useStore();
   const [activeTab, setActiveTab] = useState<'tickets' | 'wallet' | 'details'>('tickets');
   const [scratchCompId, setScratchCompId] = useState<string | null>(null);
 
@@ -283,7 +284,7 @@ export const Account = () => {
                      onClick={() => setActiveTab('wallet')}
                      className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 font-bold transition ${activeTab === 'wallet' ? 'bg-teal-50 text-teal-600' : 'text-stone-500 hover:bg-cream-50'}`}
                    >
-                     <CreditCard size={18} /> Wallet & Cards
+                     <Wallet size={18} /> Wallet
                    </button>
                    <button 
                      onClick={() => setActiveTab('details')}
@@ -382,35 +383,38 @@ export const Account = () => {
              )}
 
              {activeTab === 'wallet' && (
-                <div>
-                   <h2 className="text-3xl font-bold font-serif text-teal-900 mb-8">Wallet & Cards</h2>
-                   <div className="bg-white rounded-[2rem] p-8 border border-cream-200 max-w-lg">
-                      <div className="bg-gradient-to-br from-teal-800 to-teal-600 text-white rounded-2xl p-6 shadow-xl mb-8 relative overflow-hidden">
-                         <div className="absolute top-0 right-0 p-32 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                         <div className="flex justify-between items-start mb-8">
-                            <div className="font-mono text-xs opacity-70">Credit Card</div>
-                            <div className="font-bold italic">VISA</div>
-                         </div>
-                         <div className="font-mono text-xl tracking-widest mb-8">
-                            •••• •••• •••• 4242
-                         </div>
-                         <div className="flex justify-between items-end">
-                            <div>
-                               <div className="text-[10px] opacity-70 uppercase mb-1">Card Holder</div>
-                               <div className="font-bold text-sm">Jane Doe</div>
-                            </div>
-                            <div>
-                               <div className="text-[10px] opacity-70 uppercase mb-1">Expires</div>
-                               <div className="font-bold text-sm">12/25</div>
-                            </div>
-                         </div>
-                      </div>
-                      
-                      <Button variant="outline" className="w-full border-dashed border-2">
-                         <Plus size={18} className="mr-2" /> Add New Card
-                      </Button>
-                   </div>
-                </div>
+                <WalletSection
+                  availableBalancePence={walletCredits.reduce((sum, c) => sum + (c.remainingGBP * 100), 0)}
+                  expiringSoonPence={walletCredits
+                    .filter(c => {
+                      const daysLeft = Math.ceil((new Date(c.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                      return daysLeft <= 7 && daysLeft > 0;
+                    })
+                    .reduce((sum, c) => sum + (c.remainingGBP * 100), 0)
+                  }
+                  nextExpiryDate={walletCredits.length > 0 
+                    ? walletCredits.reduce((earliest, c) => 
+                        new Date(c.expiresAt) < new Date(earliest) ? c.expiresAt : earliest, 
+                        walletCredits[0].expiresAt
+                      )
+                    : undefined
+                  }
+                  credits={walletCredits.map(c => ({
+                    id: c.id,
+                    amount_pence: c.amountGBP * 100,
+                    remaining_pence: c.remainingGBP * 100,
+                    description: c.description,
+                    expires_at: c.expiresAt,
+                    source_type: 'instant_win',
+                    created_at: c.issuedAt,
+                  }))}
+                  transactions={[]}
+                  onRequestWithdrawal={async (amountPence) => {
+                    // For now, just show a message - actual implementation needs backend
+                    console.log('Withdrawal requested:', amountPence);
+                    return { error: null };
+                  }}
+                />
              )}
              
              {activeTab === 'details' && (

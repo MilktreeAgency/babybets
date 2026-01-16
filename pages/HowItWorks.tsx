@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Ticket, CreditCard, Trophy, Mail, Facebook, ShieldCheck, CheckCircle, HelpCircle } from 'lucide-react';
+import { Zap, Ticket, CreditCard, Trophy, Gift, Facebook, ShieldCheck, CheckCircle, HelpCircle } from 'lucide-react';
 import { Button, Badge } from '../components/ui';
 import { SEO } from '../components/SEO';
 import { CloudDecor, SparkleDecor } from '../components/illustrations';
@@ -8,28 +8,28 @@ import { CloudDecor, SparkleDecor } from '../components/illustrations';
 export const HowItWorks = () => {
   const steps = [
     {
-      icon: Search,
-      title: "1. Choose Your Prize",
-      desc: "Browse our competitions and select the prize you'd love to win. From luxury holidays to tax-free cash and nursery bundles.",
+      icon: Ticket,
+      title: "1. Buy Tickets",
+      desc: "Choose how many tickets you want. The more you buy, the cheaper per ticket - from just £1.70 each at 60+ tickets.",
       color: "bg-teal-100 text-teal-600"
     },
     {
-      icon: Ticket,
-      title: "2. Select Tickets",
-      desc: "Choose your lucky numbers or use the lucky dip. The more tickets you buy, the bigger the discount.",
+      icon: CreditCard,
+      title: "2. Secure Checkout",
+      desc: "Pay securely using our encrypted checkout. We accept all major cards. No subscription required.",
       color: "bg-peach-100 text-peach-600"
     },
     {
-      icon: CreditCard,
-      title: "3. Secure Checkout",
-      desc: "Pay securely using our encrypted checkout. We accept all major cards. No subscription required.",
-      color: "bg-blue-100 text-blue-600"
+      icon: Zap,
+      title: "3. Scratch & Reveal",
+      desc: "After purchase, scratch your virtual tickets to instantly reveal if you've won one of over 1,900 prizes!",
+      color: "bg-yellow-100 text-yellow-600"
     },
     {
       icon: Trophy,
-      title: "4. Wait for the Draw",
-      desc: "Watch the live draw on Facebook. If you win, we'll contact you immediately to arrange delivery!",
-      color: "bg-yellow-100 text-yellow-600"
+      title: "4. Claim Your Prize",
+      desc: "Won something? Choose between the prize or cash alternative. We deliver free. Plus, every ticket enters the £50 end prize draw.",
+      color: "bg-green-100 text-green-600"
     }
   ];
 
@@ -37,8 +37,8 @@ export const HowItWorks = () => {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "How to Enter BabyBets Competitions",
-    "description": "Learn how to enter BabyBets prize competitions in 4 simple steps. Browse prizes, select tickets, checkout securely, and watch the live draw.",
+    "name": "How to Enter BabyBets Instant Win Competitions",
+    "description": "Learn how to enter BabyBets instant win competitions in 4 simple steps. Buy tickets, scratch to reveal, and win prizes instantly.",
     "totalTime": "PT5M",
     "step": steps.map((step, index) => ({
       "@type": "HowToStep",
@@ -51,9 +51,9 @@ export const HowItWorks = () => {
   return (
     <div className="bg-cream-50 min-h-screen">
       <SEO
-        title="How It Works | Simple 4-Step Competition Entry | BabyBets"
-        description="Entering BabyBets competitions is easy! Choose your prize, select tickets, watch the live draw, and win. Guaranteed draws, transparent results, free delivery. Learn how to enter now."
-        keywords="how to enter competitions, how do competitions work, how to win baby prizes, competition entry guide, babybets guide"
+        title="How It Works | Instant Win Competitions | BabyBets"
+        description="Enter BabyBets instant win competitions and find out if you've won immediately! Buy tickets, scratch to reveal prizes, and claim your winnings. Over 1,900 prizes available."
+        keywords="instant win competitions, how to win baby prizes, scratch card competitions, instant win uk, babybets guide"
         canonical="https://babybets.co.uk/how-it-works"
         schema={howToSchema}
       />
@@ -67,10 +67,10 @@ export const HowItWorks = () => {
         <CloudDecor variant="small" className="absolute bottom-8 left-20 w-24 h-24 opacity-15 animate-float-reverse hidden md:block" />
         
         <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <Badge variant="peach" className="mb-6">Simple & Transparent</Badge>
+          <Badge variant="peach" className="mb-6">Instant Win</Badge>
           <h1 className="text-5xl md:text-6xl font-bold font-serif mb-6 tracking-tight">How It Works</h1>
           <p className="text-xl text-teal-100 max-w-2xl mx-auto leading-relaxed">
-            Entering our competitions is easy, fair, and fun. Join thousands of parents winning life-changing prizes every week.
+            Enter our instant win competition and discover if you've won straight away. Over 1,900 prizes available to win instantly!
           </p>
         </div>
       </section>
@@ -112,15 +112,15 @@ export const HowItWorks = () => {
                <div>
                   <h2 className="text-4xl font-bold font-serif text-teal-900 mb-6">Fairness Guaranteed</h2>
                   <p className="text-stone-600 text-lg mb-8 leading-relaxed">
-                    We pride ourselves on being the most transparent competition site in the UK. We use a random number generator for all draws, streamed live for everyone to see.
+                    Our instant win system is completely fair and transparent. Winning ticket codes are pre-assigned before the competition goes live, so every ticket has a genuine chance to win.
                   </p>
                   
                   <ul className="space-y-4">
                      {[
-                       "Live draws on Facebook every week",
-                       "Winners contacted immediately after draw",
-                       "Guaranteed draws regardless of ticket sales",
-                       "No extensions, ever",
+                       "Winning codes pre-assigned before competition starts",
+                       "Instant reveal - find out immediately if you've won",
+                       "Choose between prize or cash alternative",
+                       "End prize draw for all ticket holders",
                        "Free postal entry route available"
                      ].map((item, i) => (
                        <li key={i} className="flex items-center gap-3 text-teal-800 font-medium">
@@ -133,17 +133,17 @@ export const HowItWorks = () => {
                <div className="relative">
                   <div className="bg-cream-100 rounded-[3rem] p-8 aspect-square relative z-0" aria-hidden="true"></div>
                   <img 
-                    src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800" 
-                    className="absolute inset-0 w-full h-full object-cover rounded-[3rem] -translate-x-6 -translate-y-6 shadow-2xl z-10" 
-                    alt="Happy BabyBets competition winner celebrating their prize" 
+                    src="/images/competitions/PRIZE 1 ICANDY PEACH 7.png" 
+                    className="absolute inset-0 w-full h-full object-contain rounded-[3rem] -translate-x-6 -translate-y-6 shadow-2xl z-10 bg-white p-4" 
+                    alt="iCandy Peach 7 - top instant win prize at BabyBets" 
                     loading="lazy"
                   />
                   <div className="absolute bottom-10 right-0 bg-white p-6 rounded-2xl shadow-xl z-20 max-w-xs animate-bounce" style={{ animationDuration: '3s' }}>
                      <div className="flex items-center gap-3 mb-2">
-                        <div className="bg-teal-100 p-2 rounded-full text-teal-600"><Facebook size={20} /></div>
-                        <span className="font-bold text-teal-900">Watch Live</span>
+                        <div className="bg-yellow-100 p-2 rounded-full text-yellow-600"><Zap size={20} /></div>
+                        <span className="font-bold text-teal-900">Instant Wins</span>
                      </div>
-                     <p className="text-xs text-stone-500">Join 45,000+ others watching our draws live on Facebook every Wednesday & Sunday.</p>
+                     <p className="text-xs text-stone-500">Over 1,900 prizes to be won instantly including iCandy prams, car seats, and cash!</p>
                   </div>
                </div>
             </div>

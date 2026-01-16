@@ -1,15 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useStore } from '../store';
 import { Button } from '../components/ui';
-import { Trash2, Lock, CreditCard, ShieldCheck, Tag, X, Check } from 'lucide-react';
+import { Trash2, CreditCard, ShieldCheck, Tag, X, Check, Wallet, Info } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { WALLET_RULES } from '../lib/constants';
 
 export const Checkout = () => {
-  const { cart, removeFromCart, cartTotal, discountedTotal, clearCart, completePurchase, applyPromoCode, removePromoCode, discount, appliedPromoCode } = useStore();
+  const { 
+    cart, 
+    removeFromCart, 
+    cartTotal, 
+    discountedTotal, 
+    finalTotal,
+    completePurchase, 
+    applyPromoCode, 
+    removePromoCode, 
+    discount, 
+    appliedPromoCode,
+    walletCredits,
+    getAvailableWalletBalance,
+    getMaxCreditForBasket,
+    applyWalletCredit,
+    removeWalletCredit,
+    appliedCreditAmount
+  } = useStore();
+  
   const [isProcessing, setIsProcessing] = useState(false);
   const [promoInput, setPromoInput] = useState('');
   const [promoError, setPromoError] = useState('');
   const navigate = useNavigate();
+
+  // Terms and conditions checkboxes
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [isUKResident, setIsUKResident] = useState(false);
+  const [isOver18, setIsOver18] = useState(false);
+
+  // Wallet credit toggle
+  const [useWalletCredit, setUseWalletCredit] = useState(false);
+
+  // All checkboxes must be checked to proceed
+  const canProceed = agreeTerms && isUKResident && isOver18;
+
+  // Calculate wallet values
+  const availableWalletBalance = getAvailableWalletBalance();
+  const maxCreditForBasket = getMaxCreditForBasket();
+  const hasWalletCredit = availableWalletBalance > 0;
+
+  // Handle wallet credit toggle
+  const handleWalletToggle = (enabled: boolean) => {
+    setUseWalletCredit(enabled);
+    if (enabled) {
+      applyWalletCredit(maxCreditForBasket);
+    } else {
+      removeWalletCredit();
+    }
+  };
 
   const handleFakePayment = (e?: React.SyntheticEvent) => {
     if (e) e.preventDefault();
@@ -47,8 +92,9 @@ export const Checkout = () => {
   }
 
   const subTotal = cartTotal();
-  const finalTotal = discountedTotal();
-  const savings = subTotal - finalTotal;
+  const afterDiscount = discountedTotal();
+  const promoSavings = subTotal - afterDiscount;
+  const totalToPay = finalTotal();
 
   return (
     <div className="min-h-screen bg-cream-50 py-12">
@@ -110,21 +156,82 @@ export const Checkout = () => {
                   {promoError && <p className="text-rose-500 text-sm mt-2">{promoError}</p>}
                </div>
 
+               {/* Wallet Credit Section */}
+               {hasWalletCredit && (
+                 <div className="mt-6 pt-6 border-t border-cream-200">
+                   <div className="flex items-center justify-between mb-3">
+                     <label className="flex items-center gap-2 cursor-pointer">
+                       <div className="relative">
+                         <input
+                           type="checkbox"
+                           checked={useWalletCredit}
+                           onChange={(e) => handleWalletToggle(e.target.checked)}
+                           className="sr-only peer"
+                         />
+                         <div className={`w-12 h-6 rounded-full transition-colors ${useWalletCredit ? 'bg-teal-500' : 'bg-stone-200'}`}>
+                           <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${useWalletCredit ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                         </div>
+                       </div>
+                       <span className="font-medium text-teal-900 flex items-center gap-2">
+                         <Wallet size={18} className="text-teal-500" />
+                         Use Wallet Credit
+                       </span>
+                     </label>
+                     <span className="text-sm text-stone-500">
+                       Balance: <span className="font-bold text-teal-900">£{availableWalletBalance.toFixed(2)}</span>
+                     </span>
+                   </div>
+                   
+                   {useWalletCredit && (
+                     <div className="bg-teal-50 border border-teal-100 rounded-xl p-4">
+                       <div className="flex items-start gap-2">
+                         <Info size={16} className="text-teal-500 shrink-0 mt-0.5" />
+                         <div className="text-sm text-teal-700">
+                           <p className="font-medium">Applying £{appliedCreditAmount.toFixed(2)} credit</p>
+                           <p className="text-xs text-teal-600 mt-1">
+                             Maximum {(WALLET_RULES.maxBasketPercentage * 100).toFixed(0)}% of basket can be paid with credit
+                           </p>
+                         </div>
+                       </div>
+                     </div>
+                   )}
+                 </div>
+               )}
+
+               {/* Order Totals */}
                <div className="border-t border-cream-200 mt-8 pt-8 space-y-3">
                  <div className="flex justify-between items-center text-stone-500">
                     <span>Subtotal</span>
                     <span>£{subTotal.toFixed(2)}</span>
                  </div>
+                 
                  {discount > 0 && (
                    <div className="flex justify-between items-center text-emerald-600 font-medium">
-                      <span>Discount ({(discount * 100).toFixed(0)}%)</span>
-                      <span>-£{savings.toFixed(2)}</span>
+                      <span>Promo Discount ({(discount * 100).toFixed(0)}%)</span>
+                      <span>-£{promoSavings.toFixed(2)}</span>
                    </div>
                  )}
-                 <div className="flex justify-between items-center pt-2">
+                 
+                 {appliedCreditAmount > 0 && (
+                   <div className="flex justify-between items-center text-teal-600 font-medium">
+                      <span className="flex items-center gap-1">
+                        <Wallet size={14} />
+                        Wallet Credit
+                      </span>
+                      <span>-£{appliedCreditAmount.toFixed(2)}</span>
+                   </div>
+                 )}
+                 
+                 <div className="flex justify-between items-center pt-4 border-t border-cream-100">
                    <span className="font-bold text-stone-900 text-xl">Total to Pay</span>
-                   <span className="text-4xl font-bold text-teal-900">£{finalTotal.toFixed(2)}</span>
+                   <span className="text-4xl font-bold text-teal-900">£{totalToPay.toFixed(2)}</span>
                  </div>
+                 
+                 {(promoSavings > 0 || appliedCreditAmount > 0) && (
+                   <p className="text-sm text-emerald-600 text-right font-medium">
+                     You're saving £{(promoSavings + appliedCreditAmount).toFixed(2)}!
+                   </p>
+                 )}
                </div>
              </div>
              
@@ -144,8 +251,8 @@ export const Checkout = () => {
                  <button 
                    type="button" 
                    onClick={handleFakePayment} 
-                   disabled={isProcessing} 
-                   className="flex items-center justify-center bg-black text-white h-14 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+                   disabled={isProcessing || !canProceed} 
+                   className="flex items-center justify-center bg-black text-white h-14 rounded-xl hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
                    style={{ backgroundColor: '#000' }}
                    aria-label="Pay with Apple Pay"
                  >
@@ -160,8 +267,8 @@ export const Checkout = () => {
                  <button 
                    type="button" 
                    onClick={handleFakePayment} 
-                   disabled={isProcessing} 
-                   className="flex items-center justify-center bg-white h-14 rounded-xl hover:shadow-md transition disabled:opacity-50 border-2 border-stone-200"
+                   disabled={isProcessing || !canProceed} 
+                   className="flex items-center justify-center bg-white h-14 rounded-xl hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed border-2 border-stone-200"
                    aria-label="Pay with Google Pay"
                  >
                     <svg width="55" height="22" viewBox="0 0 55 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -213,8 +320,79 @@ export const Checkout = () => {
                    </div>
                 </div>
 
-                <Button type="submit" disabled={isProcessing} size="lg" className="w-full text-lg py-5 shadow-lg shadow-teal-100">
-                  {isProcessing ? 'Processing Payment...' : `Pay £${finalTotal.toFixed(2)}`}
+                {/* Terms, Age and Residency Verification */}
+                <div className="bg-cream-50 p-6 rounded-2xl border border-cream-200 mb-8 space-y-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="bg-white p-2 rounded-lg text-teal-500 shadow-sm"><ShieldCheck size={20} /></div>
+                    <span className="font-bold text-teal-900">Entry Requirements</span>
+                  </div>
+                  
+                  {/* Terms and Conditions Checkbox */}
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <div className="relative mt-0.5">
+                      <input 
+                        type="checkbox" 
+                        checked={agreeTerms}
+                        onChange={(e) => setAgreeTerms(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${agreeTerms ? 'bg-teal-500 border-teal-500' : 'bg-white border-stone-300 group-hover:border-teal-400'}`}>
+                        {agreeTerms && <Check size={14} className="text-white" strokeWidth={3} />}
+                      </div>
+                    </div>
+                    <span className="text-sm text-stone-600 leading-relaxed">
+                      I agree to the{' '}
+                      <Link to="/terms-of-use" className="text-teal-600 font-medium hover:underline" target="_blank">Terms of Use</Link>
+                      {' '}and{' '}
+                      <Link to="/Prize-Competition-Terms-and-Conditions" className="text-teal-600 font-medium hover:underline" target="_blank">Prize Competition Terms and Conditions</Link>
+                    </span>
+                  </label>
+
+                  {/* UK Resident Checkbox */}
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <div className="relative mt-0.5">
+                      <input 
+                        type="checkbox" 
+                        checked={isUKResident}
+                        onChange={(e) => setIsUKResident(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isUKResident ? 'bg-teal-500 border-teal-500' : 'bg-white border-stone-300 group-hover:border-teal-400'}`}>
+                        {isUKResident && <Check size={14} className="text-white" strokeWidth={3} />}
+                      </div>
+                    </div>
+                    <span className="text-sm text-stone-600 leading-relaxed">
+                      I confirm I am a <strong className="text-stone-700">UK resident</strong>
+                    </span>
+                  </label>
+
+                  {/* Over 18 Checkbox */}
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <div className="relative mt-0.5">
+                      <input 
+                        type="checkbox" 
+                        checked={isOver18}
+                        onChange={(e) => setIsOver18(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${isOver18 ? 'bg-teal-500 border-teal-500' : 'bg-white border-stone-300 group-hover:border-teal-400'}`}>
+                        {isOver18 && <Check size={14} className="text-white" strokeWidth={3} />}
+                      </div>
+                    </div>
+                    <span className="text-sm text-stone-600 leading-relaxed">
+                      I confirm I am <strong className="text-stone-700">over 18 years of age</strong>
+                    </span>
+                  </label>
+
+                  {!canProceed && (
+                    <p className="text-xs text-stone-400 pt-2">
+                      Please confirm all boxes above to complete your purchase
+                    </p>
+                  )}
+                </div>
+
+                <Button type="submit" disabled={isProcessing || !canProceed} size="lg" className="w-full text-lg py-5 shadow-lg shadow-teal-100">
+                  {isProcessing ? 'Processing Payment...' : `Pay £${totalToPay.toFixed(2)}`}
                 </Button>
               </form>
             </div>

@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Check, TrendingUp, Users, Gift, ArrowRight, Star, Instagram, Youtube, Facebook, Calculator, DollarSign, Target, Rocket, ShieldCheck, Ticket } from 'lucide-react';
+import { Play, Check, TrendingUp, Users, Gift, ArrowRight, Star, Instagram, Youtube, Facebook, Calculator, PoundSterling, Target, Rocket, ShieldCheck, Ticket } from 'lucide-react';
 import { Button, Badge, PartnerApplicationModal } from '../components/ui';
 import { Link } from 'react-router-dom';
+
+// Import commission calculation from constants
+import { getCommissionRate, COMMISSION_TIERS } from '../lib/constants';
 
 export const Partners = () => {
   const [salesVolume, setSalesVolume] = useState(2500);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Dynamic calculation logic
-  const getCommissionRate = (vol: number) => {
-    if (vol < 1000) return 0.10;
-    if (vol < 5000) return 0.15;
-    return 0.20;
-  };
-  
-  const rate = getCommissionRate(salesVolume);
+  // Use centralized tiered commission rates (per PRD Section 12)
+  // £0-£999 → 10%, £1,000-£2,999 → 15%, £3,000-£4,999 → 20%, £5,000+ → 25%
+  const salesPence = salesVolume * 100;
+  const rate = getCommissionRate(salesPence);
   const earnings = salesVolume * rate;
 
   return (
@@ -130,7 +129,7 @@ export const Partners = () => {
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { label: "Creators Registered", val: "774", icon: Users },
-                { label: "Average Commission Paid", val: "£652", icon: DollarSign },
+                { label: "Average Commission Paid", val: "£652", icon: PoundSterling },
                 { label: "Live Competitions", val: "19", icon: Gift },
               ].map((stat, i) => (
                 <div key={i} className="bg-white/5 backdrop-blur-md rounded-[2.5rem] p-8 border border-white/10 hover:bg-white/10 transition duration-300">
@@ -178,8 +177,30 @@ export const Partners = () => {
                
                <div className="border-t border-cream-200 pt-8">
                   <p className="text-5xl font-bold text-peach-500 mb-2">£{earnings.toLocaleString()}</p>
-                  <p className="text-xs text-stone-400">Your monthly earnings at {(rate * 100).toFixed(1)}% average commission</p>
-                  <p className="text-[10px] text-stone-300 mt-2 italic">Actual commission rates vary by product and tier.</p>
+                  <p className="text-xs text-stone-400">Your monthly earnings at {(rate * 100).toFixed(0)}% commission</p>
+               </div>
+               
+               {/* Commission Tier Display */}
+               <div className="grid grid-cols-4 gap-2 mt-8 text-center">
+                 {[
+                   { range: '£0-£999', rate: '10%' },
+                   { range: '£1,000-£2,999', rate: '15%' },
+                   { range: '£3,000-£4,999', rate: '20%' },
+                   { range: '£5,000+', rate: '25%' },
+                 ].map((tier, i) => {
+                   const isActive = (
+                     (i === 0 && salesVolume < 1000) ||
+                     (i === 1 && salesVolume >= 1000 && salesVolume < 3000) ||
+                     (i === 2 && salesVolume >= 3000 && salesVolume < 5000) ||
+                     (i === 3 && salesVolume >= 5000)
+                   );
+                   return (
+                     <div key={i} className={`p-3 rounded-xl transition ${isActive ? 'bg-teal-100 border-2 border-teal-300' : 'bg-cream-100 border border-cream-200'}`}>
+                       <p className={`text-xs font-medium ${isActive ? 'text-teal-700' : 'text-stone-400'}`}>{tier.range}</p>
+                       <p className={`text-lg font-bold ${isActive ? 'text-teal-900' : 'text-stone-500'}`}>{tier.rate}</p>
+                     </div>
+                   );
+                 })}
                </div>
             </div>
             

@@ -18,8 +18,7 @@ const Account = lazy(() => import('./pages/Account').then(module => ({ default: 
 const HowItWorks = lazy(() => import('./pages/HowItWorks').then(module => ({ default: module.HowItWorks })));
 const FAQ = lazy(() => import('./pages/FAQ').then(module => ({ default: module.FAQ })));
 const Legal = lazy(() => import('./pages/Legal').then(module => ({ default: module.Legal })));
-const MaisibelleCollab = lazy(() => import('./pages/MaisibelleCollab').then(module => ({ default: module.MaisibelleCollab })));
-
+const SupabaseTest = lazy(() => import('./pages/SupabaseTest').then(module => ({ default: module.SupabaseTest })));
 // Loading component with branded styling
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh] bg-cream-50">
@@ -81,15 +80,22 @@ const App = () => {
             <Route path="/competitions" element={<Competitions />} />
             <Route path="/competitions/:slug" element={<CompetitionDetail />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/winners" element={<Winners />} />
+            {/* <Route path="/winners" element={<Winners />} /> */}
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/legal/:type" element={<Legal />} />
+            {/* Legal pages with specific URLs for compliance */}
+            <Route path="/cookies" element={<Legal />} />
+            <Route path="/Frequently-Asked-Questions" element={<Legal />} />
+            <Route path="/privacypolicy" element={<Legal />} />
+            <Route path="/acceptable-use-policy" element={<Legal />} />
+            <Route path="/terms-of-use" element={<Legal />} />
+            <Route path="/Prize-Competition-Terms-and-Conditions" element={<Legal />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/affiliates" element={<Partners />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/maisibelle-x-babybets" element={<MaisibelleCollab />} />
+            <Route path="/supabase-test" element={<SupabaseTest />} />
           </Routes>
         </Suspense>
       </main>

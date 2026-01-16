@@ -109,7 +109,7 @@ export const Footer = () => {
               <li><Link to="/competitions?cat=toys" className="hover:text-peach-300 transition">Tech & Toys</Link></li>
               <li><Link to="/competitions?cat=cash" className="hover:text-peach-300 transition">Tax Free Cash</Link></li>
               <li><Link to="/competitions?filter=instant" className="hover:text-peach-300 transition">Instant Wins</Link></li>
-              <li><Link to="/winners" className="hover:text-peach-300 transition">Previous Winners</Link></li>
+              {/* <li><Link to="/winners" className="hover:text-peach-300 transition">Previous Winners</Link></li> */}
               <li>
                 <a 
                   href="https://www.facebook.com/babybetsofficial" 

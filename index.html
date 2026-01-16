@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Default Meta Tags (will be overridden by React Helmet) -->
-    <title>BabyBets | Win Baby Prizes, Nursery Furniture & Family Holidays UK</title>
-    <meta name="description" content="Enter premium baby and family competitions from 49p. Win prams, nursery items, holidays and cash prizes. 25,000+ winners. Regulated, transparent draws." />
-    <meta name="keywords" content="baby competitions uk, win nursery furniture, family prize draws, win prams uk, baby giveaways, instant win competitions" />
+    <title>BabyBets | Instant Win Baby Prizes | Win iCandy Prams & Cash UK</title>
+    <meta name="description" content="Enter our instant win competition for a chance to win iCandy prams, car seats, and cash prizes. Over 1,900 instant wins available. Scratch and reveal your prize immediately!" />
+    <meta name="keywords" content="instant win competitions uk, win iCandy pram, baby prize competitions, instant win baby prizes, scratch card competitions uk" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/babybets-logo.png" />
@@ -27,14 +27,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="BabyBets" />
     <meta property="og:locale" content="en_GB" />
-    <meta property="og:title" content="BabyBets | Win Baby Prizes, Nursery Furniture & Family Holidays UK" />
-    <meta property="og:description" content="Enter premium baby and family competitions from 49p. Win prams, nursery items, holidays and cash prizes." />
+    <meta property="og:title" content="BabyBets | Instant Win Baby Prizes | Win iCandy Prams UK" />
+    <meta property="og:description" content="Enter our instant win competition for iCandy prams, car seats and cash. Over 1,900 prizes to win instantly!" />
     <meta property="og:image" content="/babybets-logo.png" />
     
     <!-- Twitter Card Default Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BabyBets | Win Baby Prizes UK" />
-    <meta name="twitter:description" content="Enter premium baby and family competitions from 49p." />
+    <meta name="twitter:title" content="BabyBets | Instant Win Baby Prizes UK" />
+    <meta name="twitter:description" content="Win iCandy prams, car seats and cash instantly. Over 1,900 prizes available!" />
     
     <!-- Google Search Console Verification (Add your code when ready) -->
     <!-- <meta name="google-site-verification" content="YOUR_CODE_HERE" /> -->
@@ -45,7 +45,7 @@
     <link rel="preconnect" href="https://images.unsplash.com">
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -54,7 +54,8 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['DM Sans', 'sans-serif'],
+              sans: ['Plus Jakarta Sans', 'sans-serif'],
+              serif: ['Fraunces', 'serif'],
             },
             colors: {
               teal: {
@@ -106,6 +107,14 @@
       body {
         background-color: #fffbf7; /* cream-50 */
         color: #151e20; /* teal-900 */
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      /* Ensure serif font applies to all headlines */
+      .font-serif {
+        font-family: 'Fraunces', serif !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Fraunces', serif;
       }
       /* Hide scrollbar for clean horizontal scrolls */
       .no-scrollbar::-webkit-scrollbar {
@@ -114,6 +123,46 @@
       .no-scrollbar {
         -ms-overflow-style: none;
         scrollbar-width: none;
+      }
+      
+      /* Elegant illustration animations */
+      @keyframes float {
+        0%, 100% { 
+          transform: translateY(0px) rotate(0deg); 
+        }
+        50% { 
+          transform: translateY(-12px) rotate(2deg); 
+        }
+      }
+      
+      @keyframes float-reverse {
+        0%, 100% { 
+          transform: translateY(0px) rotate(0deg); 
+        }
+        50% { 
+          transform: translateY(12px) rotate(-2deg); 
+        }
+      }
+      
+      @keyframes gentle-spin {
+        0%, 100% { 
+          transform: rotate(0deg) scale(1); 
+        }
+        50% { 
+          transform: rotate(5deg) scale(1.05); 
+        }
+      }
+      
+      .animate-float {
+        animation: float 8s ease-in-out infinite;
+      }
+      
+      .animate-float-reverse {
+        animation: float-reverse 9s ease-in-out infinite;
+      }
+      
+      .animate-gentle-spin {
+        animation: gentle-spin 10s ease-in-out infinite;
       }
     </style>
   <script type="importmap">

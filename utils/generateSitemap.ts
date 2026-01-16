@@ -50,12 +50,6 @@ export const generateSitemap = (): string => {
       changefreq: 'monthly',
       priority: 0.6
     },
-    {
-      loc: `${baseUrl}/maisibelle-x-babybets`,
-      lastmod: today,
-      changefreq: 'weekly',
-      priority: 0.8
-    },
     // Category pages
     {
       loc: `${baseUrl}/competitions?cat=nursery`,
