@@ -22,6 +22,7 @@ export type Database = {
           email: string
           first_name: string | null
           last_name: string | null
+          date_of_birth: string | null
           phone: string | null
           role: 'user' | 'influencer' | 'admin' | 'super_admin'
           address_line1: string | null
@@ -42,6 +43,7 @@ export type Database = {
           email: string
           first_name?: string | null
           last_name?: string | null
+          date_of_birth?: string | null
           phone?: string | null
           role?: 'user' | 'influencer' | 'admin' | 'super_admin'
           address_line1?: string | null
@@ -62,6 +64,7 @@ export type Database = {
           email?: string
           first_name?: string | null
           last_name?: string | null
+          date_of_birth?: string | null
           phone?: string | null
           role?: 'user' | 'influencer' | 'admin' | 'super_admin'
           address_line1?: string | null

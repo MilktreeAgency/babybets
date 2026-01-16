@@ -53,6 +53,7 @@ export const getCurrentSession = async () => {
 export const signUp = async (email: string, password: string, metadata?: {
   firstName?: string;
   lastName?: string;
+  birthday?: string;
 }) => {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -61,6 +62,7 @@ export const signUp = async (email: string, password: string, metadata?: {
       data: {
         first_name: metadata?.firstName,
         last_name: metadata?.lastName,
+        date_of_birth: metadata?.birthday,
       },
     },
   });

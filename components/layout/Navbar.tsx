@@ -1,15 +1,55 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, Gift, User, Zap } from 'lucide-react';
+import { ShoppingBag, Menu, X, Gift, User, Zap, LogOut, ChevronDown } from 'lucide-react';
 import { useStore } from '../../store';
 import { Button } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuthModal } from '../auth';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup'>('signin');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  
   const cartTotal = useStore(state => state.cart.length);
   const setCartOpen = useStore(state => state.setCartOpen);
   const location = useLocation();
+  
+  const { user, profile, isLoading, signOut } = useAuth();
+
+  const openAuth = (mode: 'signin' | 'signup') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsUserMenuOpen(false);
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (profile?.first_name && profile?.last_name) {
+      return `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase();
+    }
+    if (user?.email) {
+      return user.email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
+  const getUserDisplayName = () => {
+    if (profile?.first_name) {
+      return profile.first_name;
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'User';
+  };
 
   const navLinks = [
     { name: 'Competitions', path: '/competitions' },
@@ -58,12 +98,74 @@ export const Navbar = () => {
 
             {/* Actions */}
             <div className="hidden md:flex items-center space-x-3">
-              <Link to="/account">
-                <Button variant="ghost" size="sm" className="hidden lg:flex font-bold">
-                  <User size={18} className="mr-2" />
-                  Log In
-                </Button>
-              </Link>
+              {isLoading ? (
+                <div className="w-20 h-10 bg-cream-100 rounded-xl animate-pulse" />
+              ) : user ? (
+                // Logged in state
+                <div className="relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-cream-50 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-sm">
+                      {getUserInitials()}
+                    </div>
+                    <span className="hidden lg:block font-bold text-teal-900 text-sm">
+                      {getUserDisplayName()}
+                    </span>
+                    <ChevronDown size={16} className={`text-stone-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {/* User dropdown menu */}
+                  <AnimatePresence>
+                    {isUserMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-cream-200 py-2 z-50"
+                      >
+                        <Link
+                          to="/account"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-stone-700 hover:bg-cream-50 transition-colors"
+                        >
+                          <User size={16} />
+                          My Account
+                        </Link>
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 transition-colors"
+                        >
+                          <LogOut size={16} />
+                          Sign Out
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                // Logged out state
+                <>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="hidden lg:flex font-bold"
+                    onClick={() => openAuth('signin')}
+                  >
+                    <User size={18} className="mr-2" />
+                    Log In
+                  </Button>
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="hidden lg:flex font-bold"
+                    onClick={() => openAuth('signup')}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
               <Button 
                 variant="primary" 
                 size="sm" 
@@ -125,14 +227,53 @@ export const Navbar = () => {
                 </Link>
               ))}
               <div className="pt-8">
-                 <Link to="/account" onClick={() => setIsMobileMenuOpen(false)}>
-                   <Button variant="secondary" className="w-full mb-4">Log In / Register</Button>
-                 </Link>
+                {user ? (
+                  <>
+                    <Link to="/account" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Button variant="secondary" className="w-full mb-4">
+                        <User size={18} className="mr-2" />
+                        My Account
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full text-rose-500"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut size={18} className="mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="primary" 
+                      className="w-full mb-4"
+                      onClick={() => openAuth('signup')}
+                    >
+                      Create Account
+                    </Button>
+                    <Button 
+                      variant="secondary" 
+                      className="w-full"
+                      onClick={() => openAuth('signin')}
+                    >
+                      Log In
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
     </>
   );
 };

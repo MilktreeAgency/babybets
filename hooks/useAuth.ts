@@ -22,7 +22,7 @@ interface AuthState {
 
 interface UseAuthReturn extends AuthState {
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string, metadata?: { firstName?: string; lastName?: string }) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, metadata?: { firstName?: string; lastName?: string; birthday?: string }) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;
@@ -131,7 +131,7 @@ export function useAuth(): UseAuthReturn {
   const handleSignUp = async (
     email: string,
     password: string,
-    metadata?: { firstName?: string; lastName?: string }
+    metadata?: { firstName?: string; lastName?: string; birthday?: string }
   ) => {
     const { data, error } = await signUp(email, password, metadata);
     
@@ -142,6 +142,7 @@ export function useAuth(): UseAuthReturn {
         email: data.user.email!,
         first_name: metadata?.firstName || null,
         last_name: metadata?.lastName || null,
+        date_of_birth: metadata?.birthday || null,
       });
       
       if (profileError) {
