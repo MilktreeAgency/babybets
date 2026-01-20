@@ -19,6 +19,7 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks').then(module => ({ def
 const FAQ = lazy(() => import('./pages/FAQ').then(module => ({ default: module.FAQ })));
 const Legal = lazy(() => import('./pages/Legal').then(module => ({ default: module.Legal })));
 const SupabaseTest = lazy(() => import('./pages/SupabaseTest').then(module => ({ default: module.SupabaseTest })));
+const PartnerPage = lazy(() => import('./pages/PartnerPage').then(module => ({ default: module.PartnerPage })));
 // Loading component with branded styling
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[60vh] bg-cream-50">
@@ -92,8 +93,14 @@ const App = () => {
             <Route path="/terms-of-use" element={<Legal />} />
             <Route path="/Prize-Competition-Terms-and-Conditions" element={<Legal />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/withdrawals" element={<Admin />} />
+            <Route path="/admin/fulfillments" element={<Admin />} />
+            <Route path="/admin/competitions" element={<Admin />} />
+            <Route path="/admin/promo-codes" element={<Admin />} />
+            <Route path="/admin/winners" element={<Admin />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/affiliates" element={<Partners />} />
+            <Route path="/partner/:slug" element={<PartnerPage />} />
             <Route path="/account" element={<Account />} />
             <Route path="/supabase-test" element={<SupabaseTest />} />
           </Routes>

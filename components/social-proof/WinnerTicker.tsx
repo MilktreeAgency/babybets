@@ -66,73 +66,82 @@ export const WinnerTicker: React.FC<WinnerTickerProps> = ({
   useEffect(() => {
     switch (speed) {
       case 'slow':
-        setAnimationDuration(25);
+        setAnimationDuration(12);
         break;
       case 'fast':
-        setAnimationDuration(10);
+        setAnimationDuration(4);
         break;
       default:
-        setAnimationDuration(15);
+        setAnimationDuration(8);
     }
   }, [speed]);
 
-  // Triple the winners for seamless infinite scroll
-  const tripleWinners = [...winners, ...winners, ...winners];
+  // Render content - create single winner item component
+  const WinnerItem = ({ winner, idx }: { winner: Winner; idx: number }) => (
+    <div
+      key={`${winner.id}-${idx}`}
+      className="flex items-center gap-3 px-6 shrink-0"
+    >
+      <div className="flex items-center gap-2">
+        {getPrizeIcon(winner.prize_name)}
+        <span className="font-bold text-teal-900 whitespace-nowrap">
+          {winner.display_name}
+        </span>
+        {winner.location && (
+          <span className="text-stone-400 text-sm whitespace-nowrap">
+            from {winner.location}
+          </span>
+        )}
+      </div>
+      <span className="text-stone-400">won</span>
+      <span className="font-bold text-teal-600 whitespace-nowrap">
+        {winner.prize_name}
+      </span>
+      {winner.prize_value_gbp && winner.prize_value_gbp >= 50 && (
+        <span className="text-xs bg-peach-100 text-peach-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
+          £{winner.prize_value_gbp}
+        </span>
+      )}
+      <span className="text-xs text-stone-400 whitespace-nowrap">
+        {getTimeAgo(winner.won_at)}
+      </span>
+      <span className="text-stone-200 mx-4">•</span>
+    </div>
+  );
 
   return (
     <div className={`overflow-hidden bg-cream-50 border-y border-cream-200 py-3 ${className}`}>
       <style>{`
         @keyframes ticker-scroll {
-          0% {
-            transform: translate3d(0, 0, 0);
+          from {
+            transform: translateX(0);
           }
-          100% {
-            transform: translate3d(-33.333%, 0, 0);
+          to {
+            transform: translateX(-50%);
           }
         }
-        .animate-ticker {
+        .ticker-wrapper {
+          display: flex;
           animation: ticker-scroll ${animationDuration}s linear infinite;
-          will-change: transform;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
         }
-        .animate-ticker:hover {
+        .ticker-wrapper:hover {
           animation-play-state: paused;
         }
       `}</style>
 
-      <div className="flex animate-ticker">
-        {tripleWinners.map((winner, idx) => (
-          <div
-            key={`${winner.id}-${idx}`}
-            className="flex items-center gap-3 px-6 shrink-0"
-          >
-            <div className="flex items-center gap-2">
-              {getPrizeIcon(winner.prize_name)}
-              <span className="font-bold text-teal-900 whitespace-nowrap">
-                {winner.display_name}
-              </span>
-              {winner.location && (
-                <span className="text-stone-400 text-sm whitespace-nowrap">
-                  from {winner.location}
-                </span>
-              )}
-            </div>
-            <span className="text-stone-400">won</span>
-            <span className="font-bold text-teal-600 whitespace-nowrap">
-              {winner.prize_name}
-            </span>
-            {winner.prize_value_gbp && winner.prize_value_gbp >= 50 && (
-              <span className="text-xs bg-peach-100 text-peach-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
-                £{winner.prize_value_gbp}
-              </span>
-            )}
-            <span className="text-xs text-stone-400 whitespace-nowrap">
-              {getTimeAgo(winner.won_at)}
-            </span>
-            <span className="text-stone-200 mx-4">•</span>
-          </div>
-        ))}
+      <div className="ticker-wrapper">
+        {/* First set */}
+        <div className="flex shrink-0">
+          {winners.map((winner, idx) => (
+            <WinnerItem key={`set1-${winner.id}-${idx}`} winner={winner} idx={idx} />
+          ))}
+        </div>
+        {/* Duplicate set for seamless loop */}
+        <div className="flex shrink-0">
+          {winners.map((winner, idx) => (
+            <WinnerItem key={`set2-${winner.id}-${idx}`} winner={winner} idx={idx} />
+          ))}
+        </div>
       </div>
     </div>
   );

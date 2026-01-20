@@ -128,7 +128,7 @@ export const BasketDrawer = () => {
                       <Zap size={16} className="text-yellow-600" fill="currentColor" />
                     </div>
                     <p className="text-xs text-yellow-800 font-medium">
-                      Scratch your tickets after purchase to win instantly!
+                      Tap to reveal your tickets after purchase to win instantly!
                     </p>
                   </div>
                 )}

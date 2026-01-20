@@ -51,7 +51,7 @@ export type ExtendedCompetitionStatus =
   | 'cancelled';
 
 /** Category for competitions */
-export type CompetitionCategory = 'Toys' | 'Nursery' | 'Prams' | 'Holidays' | 'Cash' | 'Essentials';
+export type CompetitionCategory = 'Toys' | 'Baby & Nursery' | 'Cash' | 'Instant Wins' | 'Other';
 
 /** Base competition interface */
 export interface BaseCompetition {
@@ -83,6 +83,9 @@ export interface BaseCompetition {
   
   /** Competition type */
   competitionType: CompetitionType;
+  
+  /** Whether this competition is featured on homepage */
+  isFeatured?: boolean;
   
   /** Created timestamp */
   createdAt?: string;

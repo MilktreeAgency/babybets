@@ -10,15 +10,16 @@ interface SpinWheelModalProps {
 }
 
 // 8 Segments = 45 degrees each
+// Prizes aligned with actual site competitions (iCandy Mega Mum Bundle)
 const SEGMENTS = [
-  { label: '10% OFF', color: '#496B71', value: 'BABY10', textColor: '#ffffff' },        // Teal -> White Text
-  { label: 'Free Entry', color: '#FED0B9', value: 'FREEENTRY', textColor: '#151e20' }, // Peach -> Dark Text
-  { label: '£5 Credit', color: '#e7e5e4', value: 'CREDIT5', textColor: '#151e20' },     // Stone -> Dark Text
-  { label: '15% OFF', color: '#496B71', value: 'BABY15', textColor: '#ffffff' },        // Teal -> White Text
-  { label: 'Holiday Prize', color: '#FED0B9', value: 'HOLIDAY', textColor: '#151e20' }, // Peach -> Dark Text
-  { label: '20% OFF', color: '#496B71', value: 'BABY20', textColor: '#ffffff' },        // Teal -> White Text
-  { label: 'Pram Bundle', color: '#e7e5e4', value: 'PRAMBUNDLE', textColor: '#151e20' },// Stone -> Dark Text
-  { label: 'Cash Prize', color: '#FED0B9', value: 'CASHPRIZE', textColor: '#151e20' },  // Peach -> Dark Text
+  { label: '£5 Credit', color: '#496B71', value: 'CREDIT5', textColor: '#ffffff' },        // Site credit prize
+  { label: 'Free Entry', color: '#FED0B9', value: 'FREEENTRY', textColor: '#151e20' },     // Free entry to competitions
+  { label: '£2 Credit', color: '#e7e5e4', value: 'CREDIT2', textColor: '#151e20' },        // Site credit prize
+  { label: '10% OFF', color: '#496B71', value: 'BABY10', textColor: '#ffffff' },           // Discount code
+  { label: '£1 Credit', color: '#FED0B9', value: 'CREDIT1', textColor: '#151e20' },        // Site credit prize
+  { label: '15% OFF', color: '#496B71', value: 'BABY15', textColor: '#ffffff' },           // Discount code
+  { label: '50p Credit', color: '#e7e5e4', value: 'CREDIT50P', textColor: '#151e20' },     // Site credit prize
+  { label: '£10 Bonus', color: '#FED0B9', value: 'BONUS10', textColor: '#151e20' },        // Bonus credit
 ];
 
 export const SpinWheelModal: React.FC<SpinWheelModalProps> = ({ isOpen, onClose }) => {
@@ -40,8 +41,10 @@ export const SpinWheelModal: React.FC<SpinWheelModalProps> = ({ isOpen, onClose 
     const maxSpins = 8;
     const fullRotations = Math.floor(Math.random() * (maxSpins - minSpins + 1) + minSpins) * 360;
     
-    // Weighted probabilities
-    const possibleWinners = [0, 1, 2, 3, 4, 0, 5, 2, 3, 7]; 
+    // Weighted probabilities - aligned with site credit instant wins
+    // Indices: 0=£5 Credit, 1=Free Entry, 2=£2 Credit, 3=10% OFF, 4=£1 Credit, 5=15% OFF, 6=50p Credit, 7=£10 Bonus
+    // More common: £1, £2, 50p credits and discount codes | Less common: £5, £10, Free Entry
+    const possibleWinners = [2, 3, 4, 6, 2, 4, 6, 3, 5, 4, 6, 0, 1, 6, 4, 2, 3, 6, 5, 7]; 
     const winnerIndex = possibleWinners[Math.floor(Math.random() * possibleWinners.length)];
     
     const segmentCount = SEGMENTS.length;
@@ -178,7 +181,7 @@ export const SpinWheelModal: React.FC<SpinWheelModalProps> = ({ isOpen, onClose 
               ) : (
                 <div className="text-center w-full py-2">
                    <div className="w-16 h-16 md:w-20 md:h-20 bg-peach-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-peach-500 animate-bounce">
-                      {result?.label.includes('Credit') || result?.label.includes('Entry') || result?.label.includes('Bundle') ? (
+                      {result?.label.includes('Credit') || result?.label.includes('Entry') || result?.label.includes('Bonus') ? (
                           <Trophy size={32} className="md:w-10 md:h-10" />
                       ) : (
                           <Gift size={32} className="md:w-10 md:h-10" />

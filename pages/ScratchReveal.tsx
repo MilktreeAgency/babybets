@@ -179,7 +179,7 @@ export const ScratchReveal = () => {
              <div className="inline-flex items-center gap-2 bg-peach-300 text-teal-900 px-4 py-1.5 rounded-full font-bold uppercase tracking-wider text-sm mb-4 shadow-lg animate-pulse border-2 border-peach-400">
                 <Zap size={16} fill="currentColor" /> Instant Win Stage
              </div>
-             <h1 className="text-4xl font-bold text-teal-900 mb-2">Scratch to Win</h1>
+             <h1 className="text-4xl font-bold text-teal-900 mb-2">Tap to Reveal</h1>
              <p className="text-stone-500 font-medium">Ticket: {currentTicket.ticketNumber}</p>
           </div>
 
@@ -195,12 +195,12 @@ export const ScratchReveal = () => {
                 >
                    <div className="h-full w-full rounded-[1.5rem] bg-cream-50 relative overflow-hidden flex flex-col items-center justify-center border-4 border-dashed border-peach-200 group hover:border-peach-400 transition-colors">
                       
-                      {/* Scratch Surface Overlay */}
+                      {/* Reveal Surface Overlay */}
                       <div className={`absolute inset-0 bg-gradient-to-br from-peach-200 to-peach-300 z-20 flex flex-col items-center justify-center transition-opacity duration-700 ${isRevealing ? 'opacity-0 scale-150' : 'opacity-100'}`}>
                          <div className="w-20 h-20 bg-peach-400 rounded-full mb-4 flex items-center justify-center text-white shadow-lg">
                             <Zap size={40} />
                          </div>
-                         <p className="font-bold text-teal-900 text-lg uppercase tracking-widest">Tap to Scratch</p>
+                         <p className="font-bold text-teal-900 text-lg uppercase tracking-widest">Tap to Reveal</p>
                       </div>
 
                       {/* Content Underneath (Visually hidden until revealed but we render it for structure) */}

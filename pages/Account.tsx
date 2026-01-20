@@ -153,7 +153,7 @@ const ScratchGameOverlay = ({
                              <div className="w-20 h-20 bg-stone-400 rounded-full mb-4 flex items-center justify-center text-stone-200 shadow-inner">
                                 <Zap size={40} />
                              </div>
-                             <p className="font-bold text-stone-500 text-lg uppercase tracking-widest">Tap to Scratch</p>
+                             <p className="font-bold text-stone-500 text-lg uppercase tracking-widest">Tap to Reveal</p>
                           </div>
                           <div className="text-center p-6">
                              <div className="font-bold text-stone-300 text-6xl mb-4">?</div>
@@ -364,7 +364,7 @@ export const Account = () => {
                                                   className="bg-yellow-400 hover:bg-yellow-300 text-teal-900 shadow-md animate-pulse"
                                               >
                                                    <Zap size={18} fill="currentColor" className="mr-2" />
-                                                   Scratch Cards Available!
+                                                   Tap to Reveal!
                                               </Button>
                                             ) : (
                                               <Button variant="ghost" disabled className="opacity-50">

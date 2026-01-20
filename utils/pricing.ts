@@ -181,3 +181,13 @@ export const ICANDY_QUICK_SELECT = generateQuickSelectOptions(
 // 20 tickets: £37.00 (Save £3.00) - 20 * 185p = 3700p, saves 4000p - 3700p = 300p
 // 40 tickets: £72.00 (Save £8.00) - 40 * 180p = 7200p, saves 8000p - 7200p = 800p
 // 60 tickets: £102.00 (Save £18.00) - 60 * 170p = 10200p, saves 12000p - 10200p = 1800p
+
+/**
+ * Calculate postal entries based on ticket price
+ * Formula: floor(0.87 / ticketPriceGBP), minimum 1 entry
+ * Uses BASE ticket price per PRD Section 7
+ */
+export function calculatePostalEntries(ticketPriceGBP: number): number {
+  if (ticketPriceGBP <= 0) return 1;
+  return Math.max(1, Math.floor(0.87 / ticketPriceGBP));
+}

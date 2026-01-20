@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { competitions as initialCompetitions } from '../mockData';
 import { Competition, TicketBundle } from '../types';
 import { Button } from '../components/ui';
 import { Plus, ArrowLeft, Save, Trash2, Image as ImageIcon, Calendar, DollarSign, Tag, Check, Zap, Lock, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { AdminDashboard, AdminWithdrawals, AdminFulfillments } from './Admin/index';
 
-// Categories matching types
-const CATEGORIES = ['Toys', 'Nursery', 'Essentials', 'Holidays', 'Cash'];
+// Categories matching types - updated per PRD
+const CATEGORIES = ['Toys', 'Baby & Nursery', 'Cash', 'Instant Wins', 'Other'];
 
 export const Admin = () => {
   // Auth State
@@ -131,59 +133,6 @@ export const Admin = () => {
       bundles: []
     });
   };
-
-  // --- Login View ---
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl w-full max-w-md border border-cream-200"
-        >
-          <div className="text-center mb-8">
-            <div className="bg-teal-500 w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white mb-4 shadow-lg shadow-teal-200">
-               <Lock size={32} />
-            </div>
-            <h1 className="text-2xl font-bold font-serif text-teal-900">Admin Portal</h1>
-            <p className="text-stone-500 text-sm mt-2">Please sign in to manage competitions.</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-             <div>
-               <label className="block text-xs font-bold uppercase text-stone-400 mb-2 ml-1">Username</label>
-               <input 
-                 type="text" 
-                 value={username}
-                 onChange={(e) => setUsername(e.target.value)}
-                 className="w-full p-4 bg-cream-50 rounded-xl border border-cream-200 focus:ring-2 focus:ring-teal-500 outline-none text-teal-900 font-bold"
-                 placeholder="Enter username"
-               />
-             </div>
-             <div>
-               <label className="block text-xs font-bold uppercase text-stone-400 mb-2 ml-1">Password</label>
-               <input 
-                 type="password" 
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}
-                 className="w-full p-4 bg-cream-50 rounded-xl border border-cream-200 focus:ring-2 focus:ring-teal-500 outline-none text-teal-900 font-bold"
-                 placeholder="••••••••"
-               />
-             </div>
-             
-             {loginError && (
-               <div className="p-3 bg-rose-50 text-rose-600 text-sm font-bold rounded-lg text-center">
-                 {loginError}
-               </div>
-             )}
-
-             <Button size="lg" className="w-full mt-4 shadow-xl shadow-teal-100">Sign In</Button>
-          </form>
-          <p className="text-center text-xs text-stone-300 mt-8">Credentials pre-filled for demo</p>
-        </motion.div>
-      </div>
-    );
-  }
 
   // --- Views ---
 
@@ -536,6 +485,74 @@ export const Admin = () => {
       </form>
     </motion.div>
   );
+
+  const location = useLocation();
+  
+  // If we're on a sub-route, render the appropriate admin page
+  if (location.pathname === '/admin' && isAuthenticated) {
+    return <AdminDashboard />;
+  }
+  
+  if (location.pathname === '/admin/withdrawals' && isAuthenticated) {
+    return <AdminWithdrawals />;
+  }
+  
+  if (location.pathname === '/admin/fulfillments' && isAuthenticated) {
+    return <AdminFulfillments />;
+  }
+
+  // Default admin view with competition management
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-stone-100 flex items-center justify-center p-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl w-full max-w-md border border-cream-200"
+        >
+          <div className="text-center mb-8">
+            <div className="bg-teal-500 w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white mb-4 shadow-lg shadow-teal-200">
+               <Lock size={32} />
+            </div>
+            <h1 className="text-2xl font-bold font-serif text-teal-900">Admin Portal</h1>
+            <p className="text-stone-500 text-sm mt-2">Please sign in to manage competitions.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+             <div>
+               <label className="block text-xs font-bold uppercase text-stone-400 mb-2 ml-1">Username</label>
+               <input 
+                 type="text" 
+                 value={username}
+                 onChange={(e) => setUsername(e.target.value)}
+                 className="w-full p-4 bg-cream-50 rounded-xl border border-cream-200 focus:ring-2 focus:ring-teal-500 outline-none text-teal-900 font-bold"
+                 placeholder="Enter username"
+               />
+             </div>
+             <div>
+               <label className="block text-xs font-bold uppercase text-stone-400 mb-2 ml-1">Password</label>
+               <input 
+                 type="password" 
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+                 className="w-full p-4 bg-cream-50 rounded-xl border border-cream-200 focus:ring-2 focus:ring-teal-500 outline-none text-teal-900 font-bold"
+                 placeholder="••••••••"
+               />
+             </div>
+             
+             {loginError && (
+               <div className="p-3 bg-rose-50 text-rose-600 text-sm font-bold rounded-lg text-center">
+                 {loginError}
+               </div>
+             )}
+
+             <Button size="lg" className="w-full mt-4 shadow-xl shadow-teal-100">Sign In</Button>
+          </form>
+          <p className="text-center text-xs text-stone-300 mt-8">Credentials pre-filled for demo</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-stone-100 pt-8 pb-20">

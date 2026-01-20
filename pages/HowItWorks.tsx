@@ -6,29 +6,30 @@ import { SEO } from '../components/SEO';
 import { CloudDecor, SparkleDecor } from '../components/illustrations';
 
 export const HowItWorks = () => {
+  // Updated per PRD Section 8 - generic wording (not scratch-specific)
   const steps = [
     {
       icon: Ticket,
-      title: "1. Buy Tickets",
-      desc: "Choose how many tickets you want. The more you buy, the cheaper per ticket - from just £1.70 each at 60+ tickets.",
+      title: "1. Choose a Competition",
+      desc: "Browse our instant wins or scheduled draws. Pick your competition and decide how many tickets to enter with.",
       color: "bg-teal-100 text-teal-600"
     },
     {
       icon: CreditCard,
-      title: "2. Secure Checkout",
-      desc: "Pay securely using our encrypted checkout. We accept all major cards. No subscription required.",
+      title: "2. Buy Tickets or Enter by Post",
+      desc: "Pay securely online or use our free postal entry route. No subscription required - enter as many or as few as you like.",
       color: "bg-peach-100 text-peach-600"
     },
     {
       icon: Zap,
-      title: "3. Scratch & Reveal",
-      desc: "After purchase, scratch your virtual tickets to instantly reveal if you've won one of over 1,900 prizes!",
+      title: "3. Instant Result or Scheduled Draw",
+      desc: "For instant wins, tap to reveal your result immediately. For scheduled draws, wait for the draw date to find out if you've won.",
       color: "bg-yellow-100 text-yellow-600"
     },
     {
       icon: Trophy,
-      title: "4. Claim Your Prize",
-      desc: "Won something? Choose between the prize or cash alternative. We deliver free. Plus, every ticket enters the £50 end prize draw.",
+      title: "4. Claim Prize or Withdraw",
+      desc: "Won a prize? Choose the physical item, cash alternative, or withdraw your winnings to your bank account.",
       color: "bg-green-100 text-green-600"
     }
   ];
@@ -37,8 +38,8 @@ export const HowItWorks = () => {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": "How to Enter BabyBets Instant Win Competitions",
-    "description": "Learn how to enter BabyBets instant win competitions in 4 simple steps. Buy tickets, scratch to reveal, and win prizes instantly.",
+    "name": "How to Enter BabyBets Competitions",
+    "description": "Learn how to enter BabyBets competitions in 4 simple steps. Choose a competition, buy tickets or enter by post, get instant results or wait for the draw, then claim your prize.",
     "totalTime": "PT5M",
     "step": steps.map((step, index) => ({
       "@type": "HowToStep",

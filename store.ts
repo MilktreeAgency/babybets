@@ -14,11 +14,11 @@ export interface WalletCredit {
   description: string;
 }
 
-/** Wallet rules */
+/** Wallet rules (per PRD Section 5 - no restrictions) */
 const WALLET_RULES = {
-  maxBasketPercentage: 0.5, // 50% max payable with credit
+  maxBasketPercentage: 1.0, // 100% - site credit behaves like cash
   expiryDays: 60,
-  isWithdrawable: false,
+  isWithdrawable: true,
   isExchangeable: false,
 };
 

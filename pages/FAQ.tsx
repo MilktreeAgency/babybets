@@ -127,10 +127,10 @@ export const FAQ = () => {
         <div className="mt-12 text-center">
           <p className="text-stone-600 mb-4">Still have questions? We're here to help!</p>
           <a 
-            href="mailto:hello@babybets.com" 
+            href="mailto:hello@babybets.co.uk" 
             className="inline-flex items-center gap-2 text-teal-600 font-bold hover:text-teal-800 transition"
           >
-            Contact us at hello@babybets.com
+            Contact us at hello@babybets.co.uk
           </a>
         </div>
       </div>

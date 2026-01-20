@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Wallet, Clock, ArrowDownCircle, ArrowUpCircle, AlertTriangle, Banknote, CheckCircle, X } from 'lucide-react';
+import { Wallet, Clock, ArrowDownCircle, ArrowUpCircle, AlertTriangle, Banknote, CheckCircle, X, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Badge } from '../ui';
 import { formatCurrency, penceToPounds, WALLET_RULES } from '../../lib/constants';
@@ -282,7 +282,7 @@ export const WalletSection: React.FC<WalletSectionProps> = ({
       {/* Info Box */}
       <div className="mt-6 p-4 bg-cream-50 rounded-xl border border-cream-200">
         <p className="text-sm text-stone-600">
-          <strong className="text-teal-900">How it works:</strong> Site credit can be used to pay up to 50% of your basket. 
+          <strong className="text-teal-900">How it works:</strong> Site credit behaves exactly like cash - use it for any purchase with no restrictions. 
           Credits expire after 60 days. {WALLET_RULES.isWithdrawable ? `You can withdraw cash balances over £${penceToPounds(WALLET_RULES.minWithdrawalPence).toFixed(0)}.` : ''}
         </p>
       </div>
@@ -314,39 +314,83 @@ export const WalletSection: React.FC<WalletSectionProps> = ({
                 </button>
               </div>
 
-              <div className="mb-6">
-                <p className="text-sm text-stone-500 mb-4">
+              <div className="space-y-4 mb-6">
+                <p className="text-sm text-stone-500">
                   Available balance: <span className="font-bold text-teal-900">{formatCurrency(availableBalancePence)}</span>
                 </p>
 
-                <label className="block text-xs font-bold uppercase text-stone-400 mb-2">
-                  Amount to Withdraw
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 font-medium">£</span>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-stone-400 mb-2">
+                    Amount to Withdraw
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 font-medium">£</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min={penceToPounds(WALLET_RULES.minWithdrawalPence)}
+                      max={penceToPounds(availableBalancePence)}
+                      value={withdrawAmount}
+                      onChange={(e) => {
+                        setWithdrawAmount(e.target.value);
+                        setWithdrawError('');
+                      }}
+                      placeholder="0.00"
+                      className="w-full p-3 pl-8 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-teal-400 outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Bank Details */}
+                <div>
+                  <label className="block text-xs font-bold uppercase text-stone-400 mb-2">
+                    Account Name
+                  </label>
                   <input
-                    type="number"
-                    step="0.01"
-                    min={penceToPounds(WALLET_RULES.minWithdrawalPence)}
-                    max={penceToPounds(availableBalancePence)}
-                    value={withdrawAmount}
-                    onChange={(e) => {
-                      setWithdrawAmount(e.target.value);
-                      setWithdrawError('');
-                    }}
-                    placeholder="0.00"
-                    className="w-full p-4 pl-8 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-teal-400 outline-none"
+                    type="text"
+                    placeholder="John Smith"
+                    className="w-full p-3 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-teal-400 outline-none"
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-stone-400 mb-2">
+                      Sort Code
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="00-00-00"
+                      maxLength={8}
+                      className="w-full p-3 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-teal-400 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase text-stone-400 mb-2">
+                      Account Number
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="12345678"
+                      maxLength={8}
+                      className="w-full p-3 bg-cream-50 border border-cream-200 rounded-xl focus:ring-2 focus:ring-teal-400 outline-none"
+                    />
+                  </div>
+                </div>
+
                 {withdrawError && (
-                  <p className="text-red-500 text-sm mt-2">{withdrawError}</p>
+                  <p className="text-red-500 text-sm">{withdrawError}</p>
                 )}
               </div>
 
-              <div className="bg-cream-50 rounded-xl p-4 mb-6">
-                <p className="text-xs text-stone-500">
-                  Withdrawals are processed within 3-5 business days. 
-                  You'll receive the funds via bank transfer.
+              {/* Status lifecycle notice */}
+              <div className="bg-teal-50 border border-teal-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle size={16} className="text-teal-600" />
+                  <span className="text-sm font-bold text-teal-900">Paid within 48 hours</span>
+                </div>
+                <p className="text-xs text-teal-700">
+                  Status: <span className="font-medium">Pending</span> → Approved → Paid
                 </p>
               </div>
 

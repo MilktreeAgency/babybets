@@ -2,18 +2,20 @@
  * Application Constants
  */
 
-// Wallet Rules
+// Wallet Rules (per PRD Section 5 - site credit behaves exactly like cash)
 export const WALLET_RULES = {
-  /** Maximum percentage of basket payable with credit (50%) */
-  maxBasketPercentage: 0.5,
+  /** Maximum percentage of basket payable with credit (100% - no restrictions) */
+  maxBasketPercentage: 1.0,
   /** Credit expiry period in days */
   expiryDays: 60,
   /** Whether credit can be withdrawn as cash */
-  isWithdrawable: true, // Updated per PRD - users can manually withdraw
+  isWithdrawable: true,
   /** Whether credit can be exchanged for cash */
   isExchangeable: false,
   /** Minimum withdrawal amount in pence (£5) */
   minWithdrawalPence: 500,
+  /** Withdrawal processing notice */
+  withdrawalNotice: 'Paid within 48 hours',
 } as const;
 
 // Commission Tiers for Influencers (per PRD Section 12)
@@ -36,14 +38,13 @@ export const getCommissionRate = (monthlySalesPence: number): number => {
   return 0.10; // Default to lowest tier
 };
 
-// Competition Categories
+// Competition Categories (per PRD Section 3)
 export const COMPETITION_CATEGORIES = [
   'Toys',
-  'Nursery',
-  'Prams',
-  'Holidays',
+  'Baby & Nursery',
   'Cash',
-  'Essentials',
+  'Instant Wins',
+  'Other',
 ] as const;
 
 // Competition Statuses

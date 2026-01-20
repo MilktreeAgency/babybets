@@ -78,6 +78,7 @@ export const Navbar = () => {
     { name: 'Competitions', path: '/competitions' },
     // { name: 'Winners', path: '/winners' },
     { name: 'How it Works', path: '/how-it-works' },
+    { name: 'Shelley x Nick', path: '/partner/shelleyxnick', isNew: true },
     { name: 'Partners', path: '/partners' },
   ];
 
@@ -108,13 +109,18 @@ export const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`text-sm font-bold transition-colors flex items-center group ${
+                  className={`text-sm font-bold transition-colors flex items-center gap-1.5 group ${
                     isActive(link.path) 
                       ? 'text-teal-600' 
                       : 'text-stone-500 hover:text-teal-700'
                   }`}
                 >
                   {link.name}
+                  {link.isNew && (
+                    <span className="bg-peach-400 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase">
+                      New
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -248,9 +254,14 @@ export const Navbar = () => {
                   key={link.name}
                   to={link.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-2xl font-bold text-teal-900 py-3 border-b border-cream-100 flex items-center gap-2"
+                  className="block text-2xl font-bold text-teal-900 py-3 border-b border-cream-100 flex items-center gap-3"
                 >
                   {link.name}
+                  {link.isNew && (
+                    <span className="bg-peach-400 text-white text-xs px-2 py-1 rounded-full font-bold uppercase">
+                      New
+                    </span>
+                  )}
                 </Link>
               ))}
               <div className="pt-8">

@@ -28,7 +28,7 @@ export const Footer = () => {
     "description": "Premium family prize competitions in the UK",
     "url": "https://babybets.co.uk",
     "logo": "https://babybets.co.uk/babybets-logo.png",
-    "email": "hello@babybets.com",
+    "email": "hello@babybets.co.uk",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "GB"
@@ -139,8 +139,8 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold font-serif text-peach-300 mb-6 uppercase tracking-wider text-xs">Get in Touch</h4>
             <p className="text-sm text-teal-100 mb-4">Need help? Our parent support team is here Mon-Fri.</p>
-            <a href="mailto:hello@babybets.com" className="inline-flex items-center text-sm font-bold text-white hover:text-peach-300 transition">
-              <Mail size={16} className="mr-2" aria-hidden="true" /> hello@babybets.com
+            <a href="mailto:hello@babybets.co.uk" className="inline-flex items-center text-sm font-bold text-white hover:text-peach-300 transition">
+              <Mail size={16} className="mr-2" aria-hidden="true" /> hello@babybets.co.uk
             </a>
             
             <div className="mt-8 pt-6 border-t border-teal-400/30">

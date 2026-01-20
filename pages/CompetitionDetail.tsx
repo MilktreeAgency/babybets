@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
 import { Competition, TicketBundle, TieredPricingTier } from '../types';
 import { calculatePricingDetails, penceToPounds, formatPrice } from '../utils/pricing';
-import { PrizeTiersSection } from '../components/competitions';
+import { PrizeTiersSection, PostalEntrySection } from '../components/competitions';
 
 // Helper to calculate best price based on bundles (legacy)
 const calculateBestPrice = (qty: number, bundles: TicketBundle[], unitPrice: number): number => {
@@ -260,13 +260,52 @@ export const CompetitionDetail = () => {
               </div>
             </motion.div>
             
-            <div className="p-8 bg-white rounded-3xl border border-cream-200 shadow-sm">
-               <h2 className="font-bold font-serif text-teal-900 mb-4 text-lg">Prize Description</h2>
-               <p className="text-stone-600 leading-relaxed text-base">{competition.description}</p>
+            <div className="p-6 md:p-8 bg-white rounded-3xl border border-cream-200 shadow-sm">
+               <div className="flex items-center gap-3 mb-6">
+                 <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-200">
+                   <Info className="text-white" size={20} />
+                 </div>
+                 <h2 className="font-bold font-serif text-teal-900 text-xl md:text-2xl">Prize Description</h2>
+               </div>
                
-               <div className="mt-6 flex items-start gap-3 p-4 bg-cream-50 rounded-xl text-sm text-stone-600">
-                  <ShieldCheck className="text-teal-500 shrink-0" />
-                  <p>All prizes are brand new, genuine UK stock and come with full manufacturer warranty where applicable.</p>
+               {/* Format description with proper spacing and bullets if it contains line breaks or list items */}
+               <div className="text-stone-700 leading-relaxed space-y-4">
+                 {competition.description.split('\n').map((paragraph, idx) => {
+                   // Check if paragraph looks like a list item
+                   const isListItem = paragraph.trim().match(/^[-•*]\s/) || paragraph.trim().match(/^\d+\.\s/);
+                   
+                   if (isListItem) {
+                     return (
+                       <div key={idx} className="flex items-start gap-3 pl-2">
+                         <div className="w-1.5 h-1.5 bg-teal-500 rounded-full mt-2 shrink-0"></div>
+                         <p className="flex-1 text-base">{paragraph.replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, '')}</p>
+                       </div>
+                     );
+                   }
+                   
+                   return paragraph.trim() ? (
+                     <p key={idx} className="text-base">{paragraph}</p>
+                   ) : null;
+                 })}
+               </div>
+               
+               {/* Value Highlight */}
+               <div className="mt-6 p-4 bg-gradient-to-br from-peach-50 to-peach-100 rounded-2xl border border-peach-200">
+                 <div className="flex items-center justify-between">
+                   <span className="text-sm font-medium text-stone-600">Total Prize Value</span>
+                   <span className="text-2xl font-bold text-teal-900">£{competition.retailValueGBP.toLocaleString()}</span>
+                 </div>
+               </div>
+               
+               {/* Guarantee Badge */}
+               <div className="mt-6 flex items-start gap-3 p-4 bg-gradient-to-br from-teal-50 to-cream-50 rounded-xl border border-teal-100">
+                  <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center shrink-0">
+                    <ShieldCheck className="text-white" size={18} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-teal-900 text-sm mb-1">Quality Guarantee</p>
+                    <p className="text-sm text-stone-600 leading-relaxed">All prizes are brand new, genuine UK stock and come with full manufacturer warranty where applicable.</p>
+                  </div>
                </div>
             </div>
             
@@ -491,6 +530,13 @@ export const CompetitionDetail = () => {
                   </p>
                 </div>
              </div>
+
+             {/* Postal Entry Section - Compliance Requirement */}
+             <PostalEntrySection
+               ticketPriceGBP={competition.baseTicketPriceGBP || competition.ticketPriceGBP}
+               competitionTitle={competition.title}
+               competitionEndDate={competition.drawDateTime}
+             />
 
              {/* Secondary Actions */}
              <div className="mt-8 flex justify-center gap-8 text-sm font-bold text-stone-400">

@@ -47,10 +47,11 @@ const HeroSection = () => (
     <SparkleDecor className="absolute top-1/3 left-1/4 w-16 h-16 opacity-50 animate-gentle-spin hidden xl:block" />
     <HeartDecor className="absolute bottom-1/4 right-1/3 w-14 h-14 opacity-30 animate-float hidden xl:block" />
 
-    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-16 md:py-28 lg:py-32">
-      <div className="flex flex-col lg:flex-row gap-16 lg:gap-20 items-center">
-        {/* Left Column - Now much wider and more spacious */}
-        <div className="w-full lg:w-[55%] text-left z-10 space-y-8">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-8 md:py-28 lg:py-32">
+      {/* Mobile: Image first (flex-col-reverse), Desktop: Text first (lg:flex-row) */}
+      <div className="flex flex-col-reverse lg:flex-row gap-8 lg:gap-20 items-center">
+        {/* Left Column - Text content */}
+        <div className="w-full lg:w-[55%] text-left z-10 space-y-6 lg:space-y-8">
            {/* Badge */}
            <div>
              <Badge variant="peach" className="mb-0 px-4 py-2 text-sm font-bold shadow-sm">
@@ -109,16 +110,6 @@ const HeroSection = () => (
                  <Star size={18} fill="currentColor" />
                </div>
                <span className="text-sm text-stone-600 font-bold">4.9/5 from 7,800+ reviews</span>
-             </div>
-           </div>
-           
-           {/* Brand Logos Section */}
-           <div className="pt-6 border-t border-stone-200">
-             <p className="text-xs text-stone-400 font-bold uppercase tracking-wider mb-5">Featured brands</p>
-             <div className="flex flex-wrap items-center gap-8 opacity-70">
-               <div className="text-stone-700 font-bold text-2xl tracking-tight">iCandy</div>
-               <div className="text-stone-700 font-bold text-2xl tracking-tight">Smyths Toys</div>
-               <div className="text-stone-700 font-bold text-2xl tracking-tight">Rockit</div>
              </div>
            </div>
         </div>
@@ -217,7 +208,7 @@ const TrustStatsSection = () => {
             }
           }
           .animate-scroll {
-            animation: scroll 20s linear infinite;
+            animation: scroll 8s linear infinite;
           }
           .animate-scroll:hover {
             animation-play-state: paused;
@@ -271,7 +262,8 @@ const InstantWinsSection = () => {
              </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {/* 2-column grid on mobile, never collapses to single column */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
              {instants.slice(0, 4).map(comp => (
                <CompetitionCard key={comp.id} comp={comp} variant="instant" />
              ))}
@@ -281,99 +273,47 @@ const InstantWinsSection = () => {
   );
 };
 
-const FeaturedCompetitionSection = () => {
-  // Show the first/featured competition prominently
-  const featured = competitions[0];
+// Featured Competitions Slider - horizontal swipeable on mobile
+const FeaturedCompetitionsSlider = () => {
+  // Filter featured competitions (or use first few if none marked featured)
+  const featuredComps = competitions.filter(c => c.isFeatured === true);
+  const displayComps = featuredComps.length > 0 ? featuredComps : competitions.slice(0, 4);
   
-  if (!featured) return null;
+  if (displayComps.length === 0) return null;
 
   return (
-    <section className="py-16 bg-cream-50">
+    <section className="py-12 bg-cream-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 mb-8">
-          <h2 className="text-3xl font-bold font-serif text-teal-900 tracking-tight">Featured Competition</h2>
-          <div className="h-px bg-cream-300 flex-grow"></div>
-          <Link to="/competitions" className="text-sm font-bold text-teal-600 uppercase hover:text-teal-800">View All</Link>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="bg-yellow-400 text-yellow-900 p-2 rounded-lg shadow-sm">
+              <Zap size={20} fill="currentColor" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold font-serif text-teal-900 tracking-tight">Featured Competitions</h2>
+          </div>
+          <Link to="/competitions" className="text-sm font-bold text-teal-600 uppercase hover:text-teal-800 hidden sm:block">
+            View All
+          </Link>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Large Featured Card */}
-          <Link to={`/competitions/${featured.slug}`} className="group block">
-            <div className="relative rounded-3xl overflow-hidden shadow-xl border border-cream-200 bg-white">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img 
-                  src={featured.image} 
-                  alt={featured.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+        {/* Horizontal scrollable slider with snap */}
+        <div className="relative -mx-4 px-4">
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {displayComps.map((comp) => (
+              <div key={comp.id} className="flex-shrink-0 w-[280px] sm:w-[320px] snap-start">
+                <CompetitionCard comp={comp} variant={comp.instantWin ? 'instant' : 'default'} />
               </div>
-              
-              {/* Instant Win Badge */}
-              {featured.instantWin && (
-                <div className="absolute top-4 left-4 bg-yellow-400 text-yellow-900 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1.5 shadow-lg">
-                  <Zap size={14} fill="currentColor" />
-                  INSTANT WIN
-                </div>
-              )}
-              
-              {/* Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-teal-900/95 via-teal-900/70 to-transparent p-6 text-white">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="bg-peach-300 text-teal-900 text-xs font-bold px-2 py-1 rounded">
-                    From £{featured.tieredPricing ? '1.70' : featured.ticketPriceGBP.toFixed(2)}
-                  </span>
-                  <span className="text-peach-200 text-sm">
-                    Worth £{featured.retailValueGBP.toLocaleString()}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold font-serif mb-2">{featured.title}</h3>
-                <div className="flex items-center gap-4 text-sm text-teal-100">
-                  <span className="flex items-center gap-1">
-                    <Gift size={14} />
-                    {featured.instantWinPrizes?.length || 0}+ Instant Win Prizes
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Ticket size={14} />
-                    {featured.maxTickets.toLocaleString()} Tickets
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Link>
-          
-          {/* Prize Highlights */}
-          <div className="flex flex-col justify-center">
-            <h3 className="text-2xl font-bold font-serif text-teal-900 mb-6">What You Can Win</h3>
-            <div className="space-y-4">
-              {featured.instantWinPrizes?.slice(0, 5).map((prize, idx) => (
-                <div key={prize.id} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-cream-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-cream-100 flex-shrink-0">
-                    {prize.image.startsWith('/') ? (
-                      <img src={prize.image} alt={prize.shortName || prize.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-teal-500">
-                        <Gift size={24} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-grow">
-                    <h4 className="font-bold text-teal-900">{prize.shortName || prize.name}</h4>
-                    <p className="text-sm text-stone-500">Worth £{prize.valueGBP.toLocaleString()}</p>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-bold text-peach-600 bg-peach-50 px-2 py-1 rounded">
-                      {prize.totalQuantity} to win
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Link to={`/competitions/${featured.slug}`} className="mt-6">
-              <Button size="lg" className="w-full">
-                Enter Now <ArrowRight size={18} className="ml-2" />
-              </Button>
-            </Link>
+            ))}
           </div>
+        </div>
+        
+        {/* Mobile view all link */}
+        <div className="mt-6 text-center sm:hidden">
+          <Link to="/competitions">
+            <Button variant="outline" className="border-teal-500 text-teal-700">
+              View All Competitions
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
@@ -472,10 +412,10 @@ const HowItWorksSection = () => (
         <div className="hidden md:block absolute top-12 left-0 right-0 h-0.5 bg-teal-400/30 -z-10 mx-16"></div>
 
         {[
-          { icon: Ticket, title: "Buy Tickets", text: "Choose how many tickets you want. The more you buy, the cheaper per ticket!" },
-          { icon: Zap, title: "Scratch & Win", text: "After purchase, scratch your virtual tickets to reveal if you've won instantly." },
-          { icon: Gift, title: "Claim Prize", text: "Won a prize? Choose between the item or cash alternative. We deliver free." },
-          { icon: Trophy, title: "End Prize Draw", text: "Every ticket also enters the £50 cash end prize draw at competition close." },
+          { icon: Ticket, title: "Choose a Competition", text: "Browse our instant wins or scheduled draws. Pick your competition and enter." },
+          { icon: Zap, title: "Tap to Reveal", text: "For instant wins, tap to reveal your result immediately after purchase." },
+          { icon: Gift, title: "Claim Prize", text: "Won a prize? Choose the physical item, cash alternative, or withdraw to your bank." },
+          { icon: Trophy, title: "Scheduled Draw", text: "Every ticket also enters the end prize draw at competition close." },
         ].map((step, i) => (
           <div key={i} className="flex flex-col items-center group">
              <div className="w-24 h-24 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center mb-6 border border-white/20 shadow-xl group-hover:bg-peach-300 transition-colors duration-300">
@@ -505,16 +445,17 @@ const JustLaunchedSection = () => {
   if (newComps.length <= 1) return null;
   
   return (
-    <section className="py-20 bg-white">
+    <section className="py-16 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-10">
+        <div className="flex items-center gap-3 mb-8 md:mb-10">
            <div className="bg-teal-500 text-white p-1.5 rounded-lg shadow-sm">
              <Star size={20} fill="white" />
            </div>
-           <h2 className="text-3xl font-bold font-serif text-teal-900 tracking-tight">Just Launched</h2>
+           <h2 className="text-2xl md:text-3xl font-bold font-serif text-teal-900 tracking-tight">Just Launched</h2>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* 2-column grid on mobile (industry standard) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {newComps.map(comp => (
              <CompetitionCard key={comp.id} comp={comp} />
           ))}
@@ -526,6 +467,8 @@ const JustLaunchedSection = () => {
 
 const SocialProofSection = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const videoRefs = React.useRef<(HTMLVideoElement | null)[]>([]);
+  const mobileVideoRefs = React.useRef<(HTMLVideoElement | null)[]>([]);
   
   const videoCards = [
     {
@@ -603,6 +546,54 @@ const SocialProofSection = () => {
     return () => clearInterval(interval);
   }, [maxDesktopSlide]);
 
+  // Ensure videos play on mount and when component becomes visible
+  React.useEffect(() => {
+    const playAllVideos = () => {
+      // Play desktop videos
+      videoRefs.current.forEach((video) => {
+        if (video) {
+          video.play().catch(() => {
+            // Autoplay was prevented, that's okay
+          });
+        }
+      });
+      // Play mobile videos
+      mobileVideoRefs.current.forEach((video) => {
+        if (video) {
+          video.play().catch(() => {
+            // Autoplay was prevented, that's okay
+          });
+        }
+      });
+    };
+
+    // Play videos immediately
+    playAllVideos();
+
+    // Also play when page becomes visible (after navigation)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        playAllVideos();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Play videos when user interacts with the page (helps with autoplay restrictions)
+    const handleInteraction = () => {
+      playAllVideos();
+    };
+    
+    window.addEventListener('click', handleInteraction, { once: true });
+    window.addEventListener('touchstart', handleInteraction, { once: true });
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+    };
+  }, []);
+
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -617,47 +608,57 @@ const SocialProofSection = () => {
           </p>
         </div>
 
-        {/* Video Slider - Mobile */}
+        {/* Video Slider - Mobile: Render all videos but only show current */}
         <div className="md:hidden relative">
           <div className="relative aspect-[9/16] rounded-[2rem] overflow-hidden shadow-2xl max-w-sm mx-auto">
-            {/* Background Video */}
-            <video 
-              key={currentSlide}
-              src={videoCards[currentSlide].video}
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
-            
-            {/* Overlay Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            
-            {/* Content */}
-            <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-              <p className="text-xl font-medium mb-8 leading-relaxed">
-                "{videoCards[currentSlide].quote}"
-              </p>
-              
-              <div>
-                <p className="font-bold text-lg leading-tight">{videoCards[currentSlide].name}</p>
-                <p className="text-white/70 text-sm font-medium">{videoCards[currentSlide].position}</p>
+            {videoCards.map((card, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                }`}
+              >
+                {/* Background Video */}
+                <video 
+                  ref={(el) => { mobileVideoRefs.current[index] = el; }}
+                  src={card.video}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                />
+                
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                
+                {/* Content */}
+                <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                  <p className="text-xl font-medium mb-8 leading-relaxed">
+                    "{card.quote}"
+                  </p>
+                  
+                  <div>
+                    <p className="font-bold text-lg leading-tight">{card.name}</p>
+                    <p className="text-white/70 text-sm font-medium">{card.position}</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Navigation Arrows */}
           <button 
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-teal-900 p-3 rounded-full shadow-lg hover:bg-white transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-teal-900 p-3 rounded-full shadow-lg hover:bg-white transition-colors z-20"
             aria-label="Previous video"
           >
             <ArrowRight size={20} className="rotate-180" />
           </button>
           <button 
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-teal-900 p-3 rounded-full shadow-lg hover:bg-white transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm text-teal-900 p-3 rounded-full shadow-lg hover:bg-white transition-colors z-20"
             aria-label="Next video"
           >
             <ArrowRight size={20} />
@@ -702,12 +703,14 @@ const SocialProofSection = () => {
                 >
                   {/* Background Video */}
                   <video 
+                    ref={(el) => { videoRefs.current[index] = el; }}
                     src={card.video}
                     className="absolute inset-0 w-full h-full object-cover"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    preload="auto"
                   />
                   
                   {/* Overlay Gradient */}
@@ -856,16 +859,15 @@ export const Home = () => {
     <div className="min-h-screen bg-cream-50">
       <SEO
         title="Win iCandy Prams & Baby Prizes Instantly | BabyBets UK"
-        description="Enter our instant win competition for iCandy Peach 7, Cocoon car seats, and cash prizes. Over 1,900 instant wins available. Scratch and reveal your prize now!"
-        keywords="instant win competitions uk, win iCandy pram, baby prize competitions, instant win baby prizes, scratch card competitions"
+        description="Enter our instant win competition for iCandy Peach 7, Cocoon car seats, and cash prizes. Over 1,900 instant wins available. Tap to reveal your prize now!"
+        keywords="instant win competitions uk, win iCandy pram, baby prize competitions, instant win baby prizes, instant reveal competitions"
         canonical="https://babybets.co.uk/"
         schema={organizationSchema}
       />
       
-      <WinnerTicker />
+      <WinnerTicker speed="fast" />
       <HeroSection />
-      <FeaturedCompetitionSection />
-      <PrizeTypesSection />
+      <FeaturedCompetitionsSlider />
       <HowItWorksSection />
       <InstantWinsSection />
       <JustLaunchedSection />

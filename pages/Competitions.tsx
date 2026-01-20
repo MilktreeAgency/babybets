@@ -7,7 +7,7 @@ import { Filter, ChevronDown, Search, X, Mail, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SEO } from '../components/SEO';
 
-const CATEGORIES = ['All', 'Toys', 'Nursery', 'Prams', 'Holidays', 'Cash'];
+const CATEGORIES = ['All', 'Toys', 'Baby & Nursery', 'Cash', 'Instant Wins', 'Other'];
 const SORTS = [
   { label: 'Ending Soon', value: 'ending_soon' },
   { label: 'Newest Added', value: 'newest' },
@@ -64,13 +64,24 @@ export const Competitions = () => {
   // Filter Logic
   const filteredCompetitions = competitions
     .filter(comp => {
-      // 1. Category Filter
-      if (activeCategory !== 'All' && comp.category !== activeCategory) return false;
+      // 1. Category Filter - "Instant Wins" category filters by instantWin flag
+      if (activeCategory === 'Instant Wins') {
+        if (!comp.instantWin) return false;
+      } else if (activeCategory !== 'All') {
+        // For other categories, match by category field
+        // Handle legacy categories by mapping them
+        const compCategory = comp.category === 'Nursery' || comp.category === 'Prams' 
+          ? 'Baby & Nursery' 
+          : comp.category === 'Holidays' || comp.category === 'Essentials'
+          ? 'Other'
+          : comp.category;
+        if (compCategory !== activeCategory) return false;
+      }
       
       // 2. Search Filter
       if (searchQuery && !comp.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       
-      // 3. Instant Win Filter via URL (optional feature)
+      // 3. Instant Win Filter via URL (legacy support)
       if (searchParams.get('filter') === 'instant' && !comp.instantWin) return false;
 
       return true;
@@ -93,7 +104,7 @@ export const Competitions = () => {
 
   // Dynamic SEO based on filters
   const getDynamicSEO = () => {
-    const isInstantWin = searchParams.get('filter') === 'instant';
+    const isInstantWin = searchParams.get('filter') === 'instant' || activeCategory === 'Instant Wins';
     
     if (isInstantWin) {
       return {
@@ -105,15 +116,14 @@ export const Competitions = () => {
 
     if (activeCategory !== 'All') {
       const categoryDescriptions: { [key: string]: string } = {
-        'Nursery': 'Win premium nursery furniture and baby essentials including SNOO bassinets, Stokke high chairs, cot beds and more. Enter from 49p.',
-        'Prams': 'Win luxury prams and pushchairs including Bugaboo, Silver Cross, UPPAbaby and more. Premium stroller competitions from £1.99 entry.',
+        'Baby & Nursery': 'Win premium baby gear, nursery furniture and essentials including prams, pushchairs, cot beds, car seats and more. Enter from 49p.',
         'Toys': 'Win amazing toys and tech for kids including LEGO bundles, PlayStation 5, iPads and ride-on cars. Fun prize competitions from 29p.',
-        'Holidays': 'Win family holidays including Disney World Florida, Lapland, Center Parcs and luxury UK breaks. Dream holiday competitions from 99p.',
-        'Cash': 'Win tax-free cash prizes from £500 to £50,000. Clear your mortgage, pay bills or save for the future. Cash competitions from 79p.'
+        'Cash': 'Win tax-free cash prizes from £500 to £50,000. Clear your mortgage, pay bills or save for the future. Cash competitions from 79p.',
+        'Other': 'Win family holidays, vouchers, experiences and more. Dream prizes and unique competitions from 99p entry.'
       };
 
       return {
-        title: `Win ${activeCategory} Prizes UK | Best ${activeCategory} Competitions 2024 | BabyBets`,
+        title: `Win ${activeCategory} Prizes UK | Best ${activeCategory} Competitions 2026 | BabyBets`,
         description: categoryDescriptions[activeCategory] || `Browse ${activeCategory.toLowerCase()} competitions and win premium prizes.`,
         keywords: `win ${activeCategory.toLowerCase()} uk, ${activeCategory.toLowerCase()} competitions, ${activeCategory.toLowerCase()} prize draws, ${activeCategory.toLowerCase()} giveaways`
       };
@@ -197,7 +207,7 @@ export const Competitions = () => {
                 />
              </div>
 
-             {/* Categories (Desktop Horizontal) */}
+             {/* Categories (Desktop Horizontal) - Instant Wins is now a category */}
              <nav className="flex-grow overflow-x-auto no-scrollbar py-1" aria-label="Competition categories">
                 <div className="flex gap-2">
                    {CATEGORIES.map(cat => (
@@ -205,38 +215,20 @@ export const Competitions = () => {
                         key={cat}
                         onClick={() => handleCategoryChange(cat)}
                         aria-pressed={activeCategory === cat}
-                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-colors flex items-center gap-1.5 ${
                           activeCategory === cat 
-                            ? 'bg-teal-900 text-white' 
+                            ? cat === 'Instant Wins' 
+                              ? 'bg-yellow-400 text-yellow-900 shadow-lg shadow-yellow-400/30'
+                              : 'bg-teal-900 text-white' 
                             : 'bg-white border border-cream-200 text-stone-500 hover:bg-cream-100 hover:text-teal-900'
                         }`}
                       >
+                        {cat === 'Instant Wins' && <Zap size={14} className={activeCategory === cat ? 'fill-current' : ''} />}
                         {cat}
                       </button>
                    ))}
                 </div>
              </nav>
-
-             {/* Instant Wins Toggle */}
-             <button
-               onClick={() => {
-                 if (searchParams.get('filter') === 'instant') {
-                   searchParams.delete('filter');
-                 } else {
-                   searchParams.set('filter', 'instant');
-                 }
-                 setSearchParams(searchParams);
-               }}
-               aria-pressed={searchParams.get('filter') === 'instant'}
-               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
-                 searchParams.get('filter') === 'instant'
-                   ? 'bg-yellow-400 text-yellow-900 shadow-lg shadow-yellow-400/30'
-                   : 'bg-white border border-cream-200 text-stone-500 hover:bg-yellow-50 hover:text-yellow-700 hover:border-yellow-300'
-               }`}
-             >
-               <Zap size={16} className={searchParams.get('filter') === 'instant' ? 'fill-current' : ''} />
-               Instant Wins
-             </button>
 
              {/* Sort */}
              <div className="min-w-[180px]">
@@ -277,12 +269,12 @@ export const Competitions = () => {
              </div>
           )}
 
-          {/* Results Grid */}
+          {/* Results Grid - 2 columns on mobile (industry standard) */}
           {filteredCompetitions.length > 0 ? (
              <motion.div 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
-               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+               className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
              >
                 {filteredCompetitions.map(comp => (
                    <CompetitionCard key={comp.id} comp={comp} variant={comp.instantWin ? 'instant' : 'default'} />

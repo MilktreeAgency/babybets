@@ -95,6 +95,7 @@ export const TrustItem = ({ icon: Icon, title, desc }: { icon: LucideIcon, title
 // Export Modal Components
 export { PartnerApplicationModal } from './PartnerApplicationModal';
 export { CashAlternativeModal } from './CashAlternativeModal';
+export { PrizeClaimModal } from './PrizeClaimModal';
 
 // Export Prize Image Components
 export { 
