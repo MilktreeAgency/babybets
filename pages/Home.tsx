@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Clock, ArrowUpRight, Check, Ticket, Trophy, Smartphone, Gift, MonitorPlay, Zap, Mail } from 'lucide-react';
+import { ArrowRight, Star, Clock, ArrowUpRight, Check, Ticket, Trophy, Smartphone, Gift, MonitorPlay, Zap, Mail, Heart, Sparkles, Instagram } from 'lucide-react';
 import { competitions, winners } from '../mockData';
 import { Button, Badge, ProgressBar, TrustItem } from '../components/ui';
 import { CompetitionCard } from '../components/ui/CompetitionCard';
@@ -109,7 +109,7 @@ const HeroSection = () => (
                  <Star size={18} fill="currentColor" />
                  <Star size={18} fill="currentColor" />
                </div>
-               <span className="text-sm text-stone-600 font-bold">4.9/5 from 7,800+ reviews</span>
+               <span className="text-sm text-stone-600 font-bold">4.9/5 from 200+ reviews</span>
              </div>
            </div>
         </div>
@@ -180,9 +180,6 @@ const TrustStatsSection = () => {
     { icon: Trophy, title: "Real Winners", desc: "Prizes delivered free to your door" },
   ];
 
-  // Duplicate items for seamless infinite scroll
-  const duplicatedItems = [...trustItems, ...trustItems, ...trustItems];
-
   return (
     <>
       {/* Desktop - Grid Layout */}
@@ -199,27 +196,38 @@ const TrustStatsSection = () => {
       {/* Mobile - Continuous Scrolling Carousel */}
       <div className="md:hidden bg-white py-8 border-t border-cream-200 overflow-hidden">
         <style>{`
-          @keyframes scroll {
+          @keyframes seamless-trust-scroll {
             0% {
               transform: translateX(0);
             }
             100% {
-              transform: translateX(-33.333%);
+              transform: translateX(-100%);
             }
           }
-          .animate-scroll {
-            animation: scroll 8s linear infinite;
+          .trust-scroll-item {
+            animation: seamless-trust-scroll 15s linear infinite;
           }
-          .animate-scroll:hover {
+          .trust-scroll-item:hover {
             animation-play-state: paused;
           }
         `}</style>
-        <div className="flex animate-scroll">
-          {duplicatedItems.map((item, index) => (
-            <div key={index} className="flex-shrink-0 w-[280px] px-4">
-              <TrustItem icon={item.icon} title={item.title} desc={item.desc} />
-            </div>
-          ))}
+        <div className="flex">
+          {/* First set */}
+          <div className="flex trust-scroll-item shrink-0">
+            {trustItems.map((item, index) => (
+              <div key={`set1-${index}`} className="flex-shrink-0 w-[280px] px-4">
+                <TrustItem icon={item.icon} title={item.title} desc={item.desc} />
+              </div>
+            ))}
+          </div>
+          {/* Second set for seamless loop */}
+          <div className="flex trust-scroll-item shrink-0" aria-hidden="true">
+            {trustItems.map((item, index) => (
+              <div key={`set2-${index}`} className="flex-shrink-0 w-[280px] px-4">
+                <TrustItem icon={item.icon} title={item.title} desc={item.desc} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
@@ -459,6 +467,112 @@ const JustLaunchedSection = () => {
           {newComps.map(comp => (
              <CompetitionCard key={comp.id} comp={comp} />
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const PartnerSpotlightSection = () => {
+  return (
+    <section className="py-16 md:py-20 bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-peach-300/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-400/30 rounded-full blur-[100px]"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          
+          {/* Left: Content */}
+          <div className="text-white order-2 lg:order-1">
+            <Badge variant="peach" className="mb-4 bg-peach-300 text-teal-900">
+              <Heart size={12} className="inline mr-1 fill-current" />
+              Official Partner
+            </Badge>
+            
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif tracking-tight mb-4">
+              Meet Shelley & Nick
+            </h2>
+            
+            <p className="text-teal-50 text-lg mb-6 leading-relaxed">
+              Join our amazing partner family in their journey to win premium baby gear! Shelley & Nick are parents just like you, sharing their love for BabyBets competitions.
+            </p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="bg-peach-300 p-2 rounded-lg">
+                  <Sparkles size={20} className="text-teal-900" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white italic leading-relaxed">
+                    "BabyBets is genuinely one of the best competition sites we have come across. Transparent draws, amazing prizes, and real winners!"
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-peach-300">
+                  <img 
+                    src="/ShelleyxNick-hero-image.jpg" 
+                    alt="Shelley and Nick"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <div className="font-bold text-white">Shelley x Nick</div>
+                  <div className="text-teal-200 text-sm">BabyBets Official Partners</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 text-center">
+                <div className="text-2xl font-bold text-white mb-1">5+</div>
+                <div className="text-xs text-teal-100">Years Parenting</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 text-center">
+                <div className="text-2xl font-bold text-white mb-1">12</div>
+                <div className="text-xs text-teal-100">Prizes Won</div>
+              </div>
+            </div>
+
+            <Link to="/partner/shelleyxnick">
+              <Button className="bg-peach-300 text-teal-900 hover:bg-peach-400 font-bold border-none shadow-lg group">
+                Visit Their Page
+                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
+
+          {/* Right: Image */}
+          <div className="order-1 lg:order-2">
+            <Link to="/partner/shelleyxnick" className="block group">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 bg-peach-300/0 group-hover:bg-peach-300/10 transition-colors duration-300 z-10"></div>
+                
+                <img 
+                  src="/ShelleyxNick-hero-image.jpg" 
+                  alt="Shelley and Nick - BabyBets Official Partners"
+                  className="w-full h-auto aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                
+                {/* Floating badge */}
+                <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-xl flex items-center gap-2 border border-peach-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-bold text-teal-900">Active Now</span>
+                </div>
+
+                {/* Instagram badge */}
+                <div className="absolute bottom-6 right-6 bg-gradient-to-br from-purple-500 to-pink-500 p-3 rounded-2xl shadow-xl group-hover:scale-110 transition-transform">
+                  <Instagram size={24} className="text-white" />
+                </div>
+              </div>
+            </Link>
+          </div>
+
         </div>
       </div>
     </section>
@@ -849,7 +963,7 @@ export const Home = () => {
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
-      "reviewCount": "7800",
+      "reviewCount": "200",
       "bestRating": "5",
       "worstRating": "1"
     }
@@ -871,6 +985,7 @@ export const Home = () => {
       <HowItWorksSection />
       <InstantWinsSection />
       <JustLaunchedSection />
+      <PartnerSpotlightSection />
       <SocialProofSection />
       <NewsletterSection />
     </div>

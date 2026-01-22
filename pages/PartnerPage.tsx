@@ -54,10 +54,9 @@ const mockInfluencers: Record<string, InfluencerData> = {
       instagram: 'https://instagram.com/shelleyxnick',
       tiktok: 'https://tiktok.com/@shelleyxnick',
     },
-    followers: '250K+',
+    followers: '',
     isAmbassador: true,
     stats: [
-      { label: 'Combined Followers', value: '250K+' },
       { label: 'Years Parenting', value: '5+' },
       { label: 'Prizes Won', value: '12' },
     ],

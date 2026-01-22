@@ -69,7 +69,7 @@ const generateCompetitionSchema = (competition: Competition) => ({
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "4.9",
-    "reviewCount": "7800"
+    "reviewCount": "200"
   }
 });
 

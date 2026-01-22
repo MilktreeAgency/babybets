@@ -4,7 +4,7 @@
  * Scrolling banner showing recent winners for social proof
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Trophy, Gift, Wallet, Banknote } from 'lucide-react';
 
 interface Winner {
@@ -61,40 +61,56 @@ export const WinnerTicker: React.FC<WinnerTickerProps> = ({
   speed = 'normal',
   className = '',
 }) => {
-  const [animationDuration, setAnimationDuration] = useState(15);
+  const [pixelsPerSecond, setPixelsPerSecond] = useState(50);
+  const tickerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentWidth, setContentWidth] = useState(0);
 
   useEffect(() => {
+    // Set speed based on device and speed prop
+    const isMobile = window.innerWidth < 768;
     switch (speed) {
       case 'slow':
-        setAnimationDuration(12);
+        setPixelsPerSecond(isMobile ? 30 : 40);
         break;
       case 'fast':
-        setAnimationDuration(4);
+        setPixelsPerSecond(isMobile ? 80 : 100);
         break;
       default:
-        setAnimationDuration(8);
+        setPixelsPerSecond(isMobile ? 50 : 60);
     }
   }, [speed]);
+
+  useEffect(() => {
+    // Measure content width for perfect animation
+    if (contentRef.current) {
+      const width = contentRef.current.offsetWidth;
+      setContentWidth(width);
+    }
+  }, [winners]);
+
+  // Calculate animation duration based on content width
+  const animationDuration = contentWidth > 0 ? contentWidth / pixelsPerSecond : 20;
 
   // Render content - create single winner item component
   const WinnerItem = ({ winner, idx }: { winner: Winner; idx: number }) => (
     <div
       key={`${winner.id}-${idx}`}
-      className="flex items-center gap-3 px-6 shrink-0"
+      className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 shrink-0"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         {getPrizeIcon(winner.prize_name)}
-        <span className="font-bold text-teal-900 whitespace-nowrap">
+        <span className="font-bold text-teal-900 whitespace-nowrap text-sm sm:text-base">
           {winner.display_name}
         </span>
         {winner.location && (
-          <span className="text-stone-400 text-sm whitespace-nowrap">
+          <span className="text-stone-400 text-xs sm:text-sm whitespace-nowrap">
             from {winner.location}
           </span>
         )}
       </div>
-      <span className="text-stone-400">won</span>
-      <span className="font-bold text-teal-600 whitespace-nowrap">
+      <span className="text-stone-400 text-sm">won</span>
+      <span className="font-bold text-teal-600 whitespace-nowrap text-sm sm:text-base">
         {winner.prize_name}
       </span>
       {winner.prize_value_gbp && winner.prize_value_gbp >= 50 && (
@@ -105,39 +121,39 @@ export const WinnerTicker: React.FC<WinnerTickerProps> = ({
       <span className="text-xs text-stone-400 whitespace-nowrap">
         {getTimeAgo(winner.won_at)}
       </span>
-      <span className="text-stone-200 mx-4">•</span>
+      <span className="text-stone-200 mx-2 sm:mx-4">•</span>
     </div>
   );
 
   return (
-    <div className={`overflow-hidden bg-cream-50 border-y border-cream-200 py-3 ${className}`}>
+    <div ref={tickerRef} className={`overflow-hidden bg-cream-50 border-y border-cream-200 py-3 ${className}`}>
       <style>{`
-        @keyframes ticker-scroll {
-          from {
+        @keyframes seamless-scroll {
+          0% {
             transform: translateX(0);
           }
-          to {
-            transform: translateX(-50%);
+          100% {
+            transform: translateX(-100%);
           }
         }
-        .ticker-wrapper {
+        .ticker-animate {
           display: flex;
-          animation: ticker-scroll ${animationDuration}s linear infinite;
+          animation: seamless-scroll ${animationDuration}s linear infinite;
         }
-        .ticker-wrapper:hover {
+        .ticker-animate:hover {
           animation-play-state: paused;
         }
       `}</style>
 
-      <div className="ticker-wrapper">
-        {/* First set */}
-        <div className="flex shrink-0">
+      <div className="flex">
+        {/* First set - this is what we measure and what scrolls out */}
+        <div ref={contentRef} className="ticker-animate flex shrink-0">
           {winners.map((winner, idx) => (
             <WinnerItem key={`set1-${winner.id}-${idx}`} winner={winner} idx={idx} />
           ))}
         </div>
-        {/* Duplicate set for seamless loop */}
-        <div className="flex shrink-0">
+        {/* Second set - duplicate that follows seamlessly */}
+        <div className="ticker-animate flex shrink-0" aria-hidden="true">
           {winners.map((winner, idx) => (
             <WinnerItem key={`set2-${winner.id}-${idx}`} winner={winner} idx={idx} />
           ))}
