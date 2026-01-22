@@ -625,12 +625,15 @@ const SocialProofSection = () => {
 
   // For desktop: max slide position (show 4 at a time, so max is length - 4)
   const maxDesktopSlide = Math.max(0, videoCards.length - 4);
+  // For mobile: max slide position (show 1 at a time, so max is length - 1)
+  const maxMobileSlide = videoCards.length - 1;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => {
-      // On mobile, loop through all videos
-      // On desktop, loop back to 0 when we've shown all
-      if (prev >= maxDesktopSlide) {
+      // On mobile (single video view), cycle through all videos
+      // On desktop, only cycle through the positions that show 4 videos
+      const maxSlide = window.innerWidth < 768 ? maxMobileSlide : maxDesktopSlide;
+      if (prev >= maxSlide) {
         return 0;
       }
       return prev + 1;
@@ -639,8 +642,9 @@ const SocialProofSection = () => {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => {
+      const maxSlide = window.innerWidth < 768 ? maxMobileSlide : maxDesktopSlide;
       if (prev <= 0) {
-        return maxDesktopSlide;
+        return maxSlide;
       }
       return prev - 1;
     });
@@ -650,7 +654,9 @@ const SocialProofSection = () => {
   React.useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => {
-        if (prev >= maxDesktopSlide) {
+        // Check viewport width to determine max slide
+        const maxSlide = window.innerWidth < 768 ? maxMobileSlide : maxDesktopSlide;
+        if (prev >= maxSlide) {
           return 0;
         }
         return prev + 1;
@@ -658,7 +664,7 @@ const SocialProofSection = () => {
     }, 6000); // Change slide every 6 seconds
 
     return () => clearInterval(interval);
-  }, [maxDesktopSlide]);
+  }, [maxDesktopSlide, maxMobileSlide]);
 
   // Ensure videos play on mount and when component becomes visible
   React.useEffect(() => {
